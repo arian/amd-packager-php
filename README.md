@@ -58,6 +58,12 @@ Unit Tests
 See the `test` folder.
 Run it with `phpunit PackagerTest.php`
 
+Requirements
+------------
+
+- PHP 5.3 (feel free to backport to 5.2)
+- IE 4.0 (j/k)
+
 License
 -------
 
