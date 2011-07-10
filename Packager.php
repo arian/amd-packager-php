@@ -9,6 +9,7 @@ class Packager {
 	protected $_baseurl;
 	protected $_alias = array();
 	protected $_modules = array();
+	protected $_files = array();
 
 	public function __construct(){
 		$this->_baseurl = __DIR__;
@@ -45,13 +46,10 @@ class Packager {
 	protected function _req($id, $baseurl){
 
 		$id = Path::resolve($baseurl, $id);
-
-		if (isset($this->_modules[$id])) return;
-
 		$extension = Path::extname($id);
-		$filename = $id;
+		$filename = $id . ($extension ? '' : '.js');
 
-		if (!$extension) $filename .= '.js';
+		if (isset($this->_files[$filename])) return;
 
 		$code = file_get_contents($filename);
 		$module = array(
@@ -73,20 +71,17 @@ class Packager {
 		*/
 
 		$deps = array();
-		$start = $extension ? false : strpos($code, 'define');
-		$collection = '';
 		$_id = '';
+		$start = $extension ? false : strpos($code, 'define');
 
 		if ($start !== false){
 
-			$end = false;
 			$current = strpos($code, '(', $start);
 			$length = strlen($code);
 			$char = '';
 
 			$string = false;
 			$array = false;
-			$collection = '';
 
 			$dep = '';
 
@@ -94,16 +89,20 @@ class Packager {
 				$last = $char;
 				$char = substr($code, $current++, 1);
 
+				// Are we finished?
+				if (!$string && $char == ']'
+					|| $current > $length
+					|| substr($code, $current, 8) == 'function'
+				) break;
+
 				// line comments
 				if (!$string && $char == '/' && $last == '/'){
-					$collection = substr($collection, 0, -1);
-					$current = strpos($code, "\n", $current);
+					$current = strpos($code, "\n", $current) + 1;
 					continue;
 				}
 
 				// other comments
 				if (!$string && $char == '*' && $last == '/'){
-					$collection = substr($collection, 0, -1);
 					$current = strpos($code, '*/', $current) + 2;
 					continue;
 				}
@@ -132,13 +131,6 @@ class Packager {
 					}
 				}
 
-				$collection .= $char;
-
-				// We're finished
-				if (!$string && $char == ']'
-					|| $current > $length
-					|| substr($collection, -8) == 'function'
-				) break;
 			}
 
 		}
@@ -148,16 +140,15 @@ class Packager {
 		$module['dependencies'] = $deps;
 
 		$this->_modules[$id] = $module;
+		$this->_files[$filename] = $id;
 
 		if (count($deps)) $this->req($deps, Path::dirname($id));
 
 	}
 
-	public function output(){
+	public function output($glue = "\n\n"){
 		$code = '';
-		foreach ($this->_modules as $module){
-			$code .= $module['content'] . PHP_EOL . PHP_EOL;
-		}
+		foreach ($this->_modules as $module) $code .= $module['content'] . $glue;
 		return $code;
 	}
 
