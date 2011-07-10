@@ -57,3 +57,9 @@ Unit Tests
 
 See the `test` folder.
 Run it with `phpunit PackagerTest.php`
+
+License
+-------
+
+Just the MIT-License
+
