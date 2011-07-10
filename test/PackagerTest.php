@@ -13,7 +13,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		$loaded = $packager->loaded();
 
 		$this->assertEquals(1, count($loaded));
-		$this->assertTrue(isset($loaded['fixtures/simple']));
+		$this->assertTrue(isset($loaded['simple']));
 
 	}
 
@@ -24,12 +24,12 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		$packager->req(array('one'));
 
 		$this->assertEquals(array(
-			'fixtures/one' => array(
+			'one' => array(
 				'two',
 				'three'
 			),
-			'fixtures/two' => array(),
-			'fixtures/three' => array()
+			'two' => array(),
+			'three' => array()
 		), $packager->dependencies());
 
 	}
@@ -42,8 +42,24 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		
 		$loaded = $packager->loaded();
 
-		$this->assertTrue(isset($loaded['fixtures/customid']));
+		$this->assertTrue(isset($loaded['customid']));
 
+	}
+
+	public function testNoID(){
+
+		$packager = new Packager\Packager;
+		$packager->setBaseUrl('fixtures');
+		$packager->req(array('noid'));
+
+$expected = "
+define('noid', function(){
+
+});
+
+";
+		$actual = $packager->output();
+		$this->assertEquals($expected, $actual);
 	}
 
 	public function testDOMNode(){
@@ -55,27 +71,27 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		$loaded = $packager->dependencies();
 
 		$this->assertEquals(array (
-			'fixtures/MooTools/DOM/Node' => array(
+			'DOM/Node' => array(
 				'../Core/Class',
 				'../Utility/typeOf',
 				'../Host/Array',
 				'../Host/String',
 				'../Utility/uniqueID',
 			),
-			'fixtures/MooTools/Core/Class' => array(
+			'Core/Class' => array(
 				'../Utility/typeOf',
 				'../Utility/merge',
 			),
-			'fixtures/MooTools/Utility/typeOf' => array(),
-			'fixtures/MooTools/Utility/merge' => array(),
-			'fixtures/MooTools/Host/Array' => array(
+			'Utility/typeOf' => array(),
+			'Utility/merge' => array(),
+			'Host/Array' => array(
 				'../Core/Host',
 			),
-			'fixtures/MooTools/Core/Host' => array(),
-			'fixtures/MooTools/Host/String' => array(
+			'Core/Host' => array(),
+			'Host/String' => array(
 				'../Core/Host',
 			),
-			'fixtures/MooTools/Utility/uniqueID' => array (),
+			'Utility/uniqueID' => array (),
 		), $packager->dependencies());
 
 	}

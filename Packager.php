@@ -25,36 +25,38 @@ class Packager {
 		return $this;
 	}
 
-	public function req(array $ids, $baseurl = null){
-
-		foreach ($ids as &$id){
-
-			foreach ($this->_alias as $alias => $url){
-				$len = strlen($alias);
-				if (substr($id, 0, $len) == $alias){
-					$id = Path::resolve($url, substr($id, $len));
-					break;
-				}
-			}
-
-			$this->_req($id, ($baseurl && substr($id, 0, 1) == '.') ? $baseurl : $this->_baseurl);
-
-		}
-
+	public function req(array $ids, $relativeTo = null){
+		foreach ($ids as &$id) $this->_req($relativeTo ? Path::resolve($relativeTo, $id) : $id);
+		return $this;
 	}
 
-	protected function _req($id, $baseurl){
+	protected function _req($id){
 
-		$id = Path::resolve($baseurl, $id);
-		$extension = Path::extname($id);
-		$filename = $id . ($extension ? '' : '.js');
+		$filename = $id;
+		$extension = Path::extname($filename);
+		$amd = $extension == '';
+		$package = '';
+		if ($amd) $filename .= '.js';
+
+		foreach ($this->_alias as $alias => $url){
+			$len = strlen($alias);
+			if (substr($filename, 0, $len) == $alias){
+				$filename = Path::resolve($url, substr($filename, $len));
+				$package = $alias;
+				break;
+			}
+		}
+
+		$filename = Path::resolve($this->_baseurl, $filename);
 
 		if (isset($this->_files[$filename])) return;
 
 		$code = file_get_contents($filename);
 		$module = array(
 			'filename' => $filename,
-			'content' => $code
+			'content' => $code,
+			'package' => $package,
+			'amd' => $amd
 		);
 
 		/*
@@ -72,7 +74,7 @@ class Packager {
 
 		$deps = array();
 		$_id = '';
-		$start = $extension ? false : strpos($code, 'define');
+		$start = $amd ? strpos($code, 'define') : false;
 
 		if ($start !== false){
 
@@ -135,21 +137,29 @@ class Packager {
 
 		}
 
-		if ($_id) $id = Path::resolve($baseurl, $_id);
+		if ($_id) $id = $_id;
 		$module['id'] = $id;
 		$module['dependencies'] = $deps;
 
 		$this->_modules[$id] = $module;
 		$this->_files[$filename] = $id;
 
-		if (count($deps)) $this->req($deps, Path::dirname($id));
+		if (count($deps)) $this->req($deps, $id . '/../');
 
 	}
 
 	public function output($glue = "\n\n"){
-		$code = '';
-		foreach ($this->_modules as $module) $code .= $module['content'] . $glue;
-		return $code;
+		$code = array();
+		foreach ($this->_modules as $module){
+			$content = $module['content'];
+			
+			if ($module['amd']){
+				$content = preg_replace('/define\((\[|function)/', "define('" . $module['id'] . "', $1", $content);
+			}
+			
+			$code[] = $content;
+		}
+		return implode($glue, $code);
 	}
 
 	public function loaded(){
