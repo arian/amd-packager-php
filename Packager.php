@@ -161,5 +161,9 @@ class Packager {
 		foreach ($this->_modules as $id => $module) $deps[$id] = $module['dependencies'];
 		return $deps;
 	}
+	
+	public function modules(){
+		return array_values($this->_files);
+	}
 
 }
