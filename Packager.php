@@ -10,7 +10,7 @@ class Packager {
 	protected $_files = array();
 
 	public function __construct(){
-		$this->_baseurl = __DIR__;
+		$this->_baseurl = dirname(__FILE__);
 	}
 
 	public function setBaseUrl($url){

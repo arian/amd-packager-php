@@ -27,32 +27,32 @@ function warn($message){
 	fclose($std_err);
 }
 
-foreach ($args as $i => $arg){
+$requires = array();
+
+for ($i = 0, $l = count($args); $i < $l; $i++){
+	$arg = $args[$i];
 
 	switch ($arg){
 		case '-h': case '--help': help(); break;
 		case '--options':
-			$options_file = $args[$i + 1];
-			array_splice($args, $i, 2);
+			$options_file = $args[++$i];
 		break;
 		case '--output':
-			$output_file = $args[$i + 1];
-			array_splice($args, $i, 2);
+			$output_file = $args[++$i];
 		break;
 		case '--modules': case '--list':
 			$method = 'modules';
-			array_splice($args, $i, 1);
 		break;
 		case '--dependencies':
 			$method = 'dependencies';
-			array_splice($args, $i, 1);
+		break;
+		default:
+			$requires[] = $arg;
 		break;
 	}
-
 }
 
-if (empty($args)) help();
-$requires = $args;
+if (empty($requires)) help();
 
 $packager = new Packager;
 
