@@ -11,8 +11,10 @@ class Path {
 		$new = array();
 		foreach ($parts as $i => $part){
 			if ($part == '.') continue;
-			elseif ($part === '..' && count($new)) array_pop($new);
-			else $new[] = $part;
+			elseif ($part == '..' && count($new)){
+				$first = array_pop($new);
+				if ($first == '..') array_unshift($new, '..', '..');
+			} else $new[] = $part;
 		}
 		return $new;
 	}
