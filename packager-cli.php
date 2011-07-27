@@ -54,7 +54,7 @@ foreach ($args as $i => $arg){
 if (empty($args)) help();
 $requires = $args;
 
-$packager = new Packager\Packager;
+$packager = new Packager;
 
 $options = include $options_file;
 
