@@ -61,8 +61,7 @@ Run it with `phpunit PackagerTest.php`
 Requirements
 ------------
 
-- PHP 5.3 (feel free to backport to 5.2)
-- IE 4.0 (j/k)
+- PHP 5.2 (tested on 5.3, but _should_ work on 5.2)
 
 License
 -------
