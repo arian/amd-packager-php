@@ -6,7 +6,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	public function testSimple(){
 
-		$packager = new Packager\Packager;
+		$packager = new Packager;
 		$packager->setBaseUrl('fixtures');
 		$packager->req(array('simple'));
 
@@ -19,7 +19,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	public function testDependencies(){
 
-		$packager = new Packager\Packager;
+		$packager = new Packager;
 		$packager->setBaseUrl('fixtures');
 		$packager->req(array('one'));
 
@@ -36,7 +36,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	public function testCustomID(){
 		
-		$packager = new Packager\Packager;
+		$packager = new Packager;
 		$packager->setBaseUrl('fixtures');
 		$packager->req(array('idtest'));
 		
@@ -48,7 +48,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	public function testNoID(){
 
-		$packager = new Packager\Packager;
+		$packager = new Packager;
 		$packager->setBaseUrl('fixtures');
 		$packager->req(array('noid'));
 
@@ -64,7 +64,7 @@ define('noid', function(){
 
 	public function testDOMNode(){
 
-		$packager = new Packager\Packager;
+		$packager = new Packager;
 		$packager->setBaseUrl('fixtures/MooTools');
 		$packager->req(array('DOM/Node'));
 

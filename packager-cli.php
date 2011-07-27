@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-include_once 'Packager.php';
+include_once dirname(__FILE__) . '/Packager.php';
 
 $args = array_slice($argv, 1);
 $options_file = 'options.php';

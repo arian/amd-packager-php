@@ -1,8 +1,6 @@
 <?php
 
-namespace Packager;
-
-include_once 'Path.php';
+include_once dirname(__FILE__) . '/Path.php';
 
 class Packager {
 

@@ -1,9 +1,5 @@
 <?php
 
-namespace Packager;
-
-include_once 'SB.php';
-
 // The Path is more or less based in the Node.js implementation
 // These methods are released by joyent under this license: https://github.com/joyent/node/blob/master/LICENSE
 
@@ -23,15 +19,11 @@ class Path {
 
 	public static function resolve(){
 		$args = func_get_args();
-		return ((substr($args[0], 0, 1) == '/') ? '/' : '')
-			. ArraySB::sb($args)
-				->implode('/')
-				->explode('/')
-				->filter(function($p){ return (bool) $p; })
-				->values()
-				->call(__NAMESPACE__ . '\Path::normalizeArray')
-				->implode('/')
-				->value();
+		$_path = explode('/', implode('/', $args));
+		$path = array();
+		foreach ($_path as $part) if ($part) $path[] = $part;
+		$path = implode('/', self::normalizeArray($path));
+		return (substr($args[0], 0, 1) == '/' ? '/' : '') . $path;
 	}
 
 	public static function dirname($path){
