@@ -16,6 +16,16 @@ CLI
 					   List the modules
 	  --dependencies   List the dependencies map
 
+### Tip:
+
+Add the following line to your `~/.bashrc` file
+
+	alias packager-amd='~/path/to/amd-packager-php/packager-cli.php'
+
+Now you can use the packager as:
+
+	packager-amd Package/Module1 Package/Module2 > myTools.js
+
 
 Packager Class
 --------------
@@ -67,4 +77,3 @@ License
 -------
 
 Just the MIT-License
-
