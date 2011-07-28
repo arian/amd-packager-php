@@ -32,7 +32,7 @@ class Packager {
 
 		$filename = $id;
 		$extension = Path::extname($filename);
-		$amd = $extension == '';
+		$amd = !in_array($extension, array('.js', '.css'/* more? */));
 		$package = '';
 		if ($amd) $filename .= '.js';
 

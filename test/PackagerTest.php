@@ -46,6 +46,19 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testDotInID(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl('fixtures');
+		$packager->req(array('with.dots.in.filename'));
+
+		$loaded = $packager->loaded();
+
+		$this->assertEquals(1, count($loaded));
+		$this->assertTrue(isset($loaded['with.dots.in.filename']));
+
+	}
+
 	public function testNoID(){
 
 		$packager = new Packager;
