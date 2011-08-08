@@ -1,13 +1,19 @@
 <?php
 
-include '../Packager.php';
+include dirname(__FILE__) . '/../Packager.php';
 
 class PackagerText extends PHPUnit_Framework_TestCase {
+
+	protected $fixtures;
+
+	public function setUp(){
+		$this->fixtures = dirname(__FILE__) . '/fixtures';
+	}
 
 	public function testSimple(){
 
 		$packager = new Packager;
-		$packager->setBaseUrl('fixtures');
+		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('simple'));
 
 		$loaded = $packager->loaded();
@@ -20,7 +26,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 	public function testDependencies(){
 
 		$packager = new Packager;
-		$packager->setBaseUrl('fixtures');
+		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('one'));
 
 		$this->assertEquals(array(
@@ -37,7 +43,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 	public function testCustomID(){
 		
 		$packager = new Packager;
-		$packager->setBaseUrl('fixtures');
+		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('idtest'));
 		
 		$loaded = $packager->loaded();
@@ -49,7 +55,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 	public function testDotInID(){
 
 		$packager = new Packager;
-		$packager->setBaseUrl('fixtures');
+		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('with.dots.in.filename'));
 
 		$loaded = $packager->loaded();
@@ -62,7 +68,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 	public function testNoID(){
 
 		$packager = new Packager;
-		$packager->setBaseUrl('fixtures');
+		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('noid'));
 
 $expected = "
@@ -78,7 +84,7 @@ define('noid', function(){
 	public function testDOMNode(){
 
 		$packager = new Packager;
-		$packager->setBaseUrl('fixtures/MooTools');
+		$packager->setBaseUrl($this->fixtures . '/MooTools');
 		$packager->req(array('DOM/Node'));
 
 		$loaded = $packager->dependencies();
@@ -110,5 +116,13 @@ define('noid', function(){
 	}
 
 	// TODO: Write other tests for the fixtures/Source (mootools) files
+
+	public function testCircular(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures . '/circular');
+		$packager->req(array('../../../loader', 'a'));
+
+	}
 
 }
