@@ -120,7 +120,6 @@ This is not a full implementation of the AMD specification.
 Some restrictions are:
 
 - The `factory` argument MUST be a function (objects are not supported)
-- It does not support the `["require", "exports"]` dependencies
 - It does not execute JavaScript, so the `define` function MUST be in the literal form. It also MUST use square brackets (`[` and `]`) for dependencies.
 
 
