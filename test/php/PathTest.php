@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__FILE__) . '/../../Path.php';
+include_once dirname(__FILE__) . '/../../Path.php';
 
 class PathTest extends PHPUnit_Framework_TestCase {
 
@@ -25,6 +25,15 @@ class PathTest extends PHPUnit_Framework_TestCase {
 	public function testDirname(){
 		$dirname = Path::dirname('/one/two/three.js');
 		$this->assertEquals('/one/two', $dirname);
+	}
+
+	public function testFilename(){
+		$filename = Path::filename('/foo/bar/three.js');
+		$this->assertEquals('three.js', $filename);
+		$filename = Path::filename('three.js');
+		$this->assertEquals('three.js', $filename);
+		$filename = Path::filename('foo/bar/yo/');
+		$this->assertEquals('', $filename);
 	}
 
 	public function testExtaname(){

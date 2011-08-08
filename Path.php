@@ -35,6 +35,11 @@ class Path {
 		return (strlen($dir) == 1) ? $dir : substr($dir, 0, -1);
 	}
 
+	public static function filename($path){
+		preg_match_all(self::SPLIT_PATH, $path, $out);
+		return (!empty($out[2][0]) && substr($out[2][0], -1) != '/') ? $out[2][0] : '';
+	}
+
 	public static function extname($path){
 		preg_match_all(self::SPLIT_PATH, $path, $out);
 		return !empty($out[3][0]) ? $out[3][0] : '';
