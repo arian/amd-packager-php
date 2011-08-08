@@ -2,8 +2,8 @@
 ---
 name: basic/three
 description: basic/three
-requires: [basic/one, basic/two]
-provides: basic/three
+requires: [basic.one, basic.two]
+provides: basic.three
 ...
 */
 

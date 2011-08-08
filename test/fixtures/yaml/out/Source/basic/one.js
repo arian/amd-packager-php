@@ -3,7 +3,7 @@
 name: basic/one
 description: basic/one
 requires: []
-provides: basic/one
+provides: basic.one
 ...
 */
 

@@ -1,0 +1,10 @@
+name: core
+current: 1.99dev
+tags: [framework]
+license: MIT
+description: "MooTools, the JavaScript Framework"
+
+sources:
+ - "Source/basic/three.js"
+ - "Source/basic/one.js"
+ - "Source/basic/two.js"

@@ -19,10 +19,10 @@ class YAMLExporterTest extends PHPUnit_Framework_TestCase {
 
 		$loaded = $packager->loaded();
 
-		foreach ($loaded as $module){
-			$yaml = new YAMLExporter($module);
-			$yaml->save(Path::resolve($this->fixtures, 'yaml/out', Path::filename($module['filename'])));
-		}
+		$export = new YAMLExporter($loaded);
+		$export->setPackageJSON($this->fixtures . '/yaml/basic/package.json');
+
+		$export->save($this->fixtures . '/yaml/out');
 
 	}
 

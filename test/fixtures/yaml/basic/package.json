@@ -1,0 +1,32 @@
+{
+	"name": "core",
+	"homepage": "http://mootools.net",
+	"version": "1.99dev",
+	"description": "MooTools, the JavaScript Framework",
+	"keywords": ["framework"],
+	"maintainers": [{
+		"name": "Valerio Proietti",
+		"email": "kamicane@gmail.com",
+		"web": "http://mad4milk.net"
+	}],
+	"contributors": [{}],
+	"bugs": {
+		"web": "https://github.com/mootools/mootools-core/issues"
+	},
+	"licenses": [{
+		"type": "MIT",
+		"url": "http://mootools.net/license.txt"
+	}],
+	"repositories": [{
+		"type": "git",
+		"url": "git://github.com/mootools/mootools-core.git"
+	}],
+	"dependencies": {"slick": "1.0.5"},
+	"implements": ["CommonJS/Packages/1.0", "CommonJS/Modules/AsynchronousDefinition"],
+	"scripts": {
+		"build": "build"
+	},
+	"directories": {
+		"src": "Source"
+	}
+}
