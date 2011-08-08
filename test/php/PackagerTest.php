@@ -84,33 +84,52 @@ define('noid', function(){
 	public function testDOMNode(){
 
 		$packager = new Packager;
-		$packager->setBaseUrl($this->fixtures . '/MooTools');
-		$packager->req(array('DOM/Node'));
+		$packager->setBaseUrl($this->fixtures);
+		$packager->addAlias('Core', 'MooTools');
+		$packager->req(array('Core/DOM/Node'));
 
-		$loaded = $packager->dependencies();
+		$this->assertEquals(array(
+			'Core/DOM/Node' => array(
+				'Core/Core/Class',
+				'Core/Utility/typeOf',
+				'Core/Host/Array',
+				'Core/Host/String',
+				'Core/Utility/uniqueID',
+			),
+			'Core/Core/Class' => array(
+				'Core/Utility/typeOf',
+				'Core/Utility/merge',
+			),
+			'Core/Utility/typeOf' => array(),
+			'Core/Utility/merge' => array(),
+			'Core/Host/Array' => array(
+				'Core/Core/Host',
+			),
+			'Core/Core/Host' => array(),
+			'Core/Host/String' => array(
+				'Core/Core/Host',
+			),
+			'Core/Utility/uniqueID' => array (),
+		), $packager->dependencies());
 
-		$this->assertEquals(array (
-			'DOM/Node' => array(
-				'../Core/Class',
-				'../Utility/typeOf',
-				'../Host/Array',
-				'../Host/String',
-				'../Utility/uniqueID',
+	}
+
+	public function testCrossPackageDependencies(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$packager->addAlias('PackageA', 'packageA')->addAlias('PackageB', 'packageB');
+		$packager->req(array('PackageA/a'));
+
+		$this->assertEquals(array(
+			'PackageA/a' => array(
+				'PackageA/b',
+				'PackageA/c',
+				'PackageB/b',
 			),
-			'Core/Class' => array(
-				'../Utility/typeOf',
-				'../Utility/merge',
-			),
-			'Utility/typeOf' => array(),
-			'Utility/merge' => array(),
-			'Host/Array' => array(
-				'../Core/Host',
-			),
-			'Core/Host' => array(),
-			'Host/String' => array(
-				'../Core/Host',
-			),
-			'Utility/uniqueID' => array (),
+			'PackageA/b' => array(),
+			'PackageA/c' => array(),
+			'PackageB/b' => array(),
 		), $packager->dependencies());
 
 	}

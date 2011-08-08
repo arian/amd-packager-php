@@ -24,15 +24,12 @@ class Packager {
 		return $this;
 	}
 
-	public function req(array $ids, $relativeTo = null){
-		foreach ($ids as $id) if (!in_array($id, $this->_skip)){
-			$this->_req($relativeTo ? Path::resolve($relativeTo, $id) : $id);
-		}
+	public function req(array $ids){
+		foreach ($ids as $id) if (!in_array($id, $this->_skip)) $this->_req($id);
 		return $this;
 	}
 
 	protected function _req($id){
-
 		$filename = $id;
 		$extension = Path::extname($filename);
 		$amd = !in_array($extension, array('.js', '.css'/* more? */));
@@ -142,12 +139,17 @@ class Packager {
 
 		if ($_id) $id = $_id;
 		$module['id'] = $id;
+
+		foreach ($deps as &$dep){
+			if (substr($dep, 0, strpos($dep, '/')) != $package && substr($dep, 0, 1) == '.')
+				$dep = Path::resolve($id . '/../', $dep);
+		}
 		$module['dependencies'] = $deps;
 
 		$this->_modules[$id] = $module;
 		$this->_files[$filename] = $id;
 
-		if (count($deps)) $this->req($deps, $id . '/../');
+		if (count($deps)) $this->req($deps);
 
 	}
 
