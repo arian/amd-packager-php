@@ -8,6 +8,7 @@ class Packager {
 	protected $_alias = array();
 	protected $_modules = array();
 	protected $_files = array();
+	protected $_skip = array('require', 'exports', 'module');
 
 	public function __construct(){
 		$this->_baseurl = dirname(__FILE__);
@@ -24,7 +25,9 @@ class Packager {
 	}
 
 	public function req(array $ids, $relativeTo = null){
-		foreach ($ids as &$id) $this->_req($relativeTo ? Path::resolve($relativeTo, $id) : $id);
+		foreach ($ids as $id) if (!in_array($id, $this->_skip)){
+			$this->_req($relativeTo ? Path::resolve($relativeTo, $id) : $id);
+		}
 		return $this;
 	}
 
@@ -56,6 +59,8 @@ class Packager {
 			'package' => $package,
 			'amd' => $amd
 		);
+
+		// TODO: analyze factory function body for require()
 
 		/*
 		define(function(){
