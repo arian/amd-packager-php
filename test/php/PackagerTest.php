@@ -1,13 +1,13 @@
 <?php
 
-include dirname(__FILE__) . '/../Packager.php';
+include dirname(__FILE__) . '/../../Packager.php';
 
 class PackagerText extends PHPUnit_Framework_TestCase {
 
 	protected $fixtures;
 
 	public function setUp(){
-		$this->fixtures = dirname(__FILE__) . '/fixtures';
+		$this->fixtures = dirname(__FILE__) . '/../fixtures';
 	}
 
 	public function testSimple(){
