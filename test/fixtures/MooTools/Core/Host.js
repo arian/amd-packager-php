@@ -6,7 +6,8 @@ description: The Host object
 */
 
 define(function(){
-
-	return function Host(){};
-
+	return function(guest){
+		var host = function(){};
+		return host;
+	};
 });

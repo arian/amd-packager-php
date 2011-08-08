@@ -6,7 +6,5 @@ description: Contains the Class Function for easily creating, extending, and imp
 */
 
 define(['../Utility/typeOf', '../Utility/merge'], function(typeOf, Object, Accessor){
-
-	return function Class(){};
-
+	return 'Class';
 });

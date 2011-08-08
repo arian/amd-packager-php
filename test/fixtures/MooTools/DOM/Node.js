@@ -10,7 +10,5 @@ define([
 	'../Host/String',/* '../Slick/Finder',*/
 	'../Utility/uniqueID' //,['bar']
 ], function(Class, typeOf, Object, Array, String, Finder, Parser, Accessor){
-
-	return Node;
-
+	return arguments;
 });
