@@ -33,9 +33,9 @@ class Packager {
 		$filename = $id;
 		$extension = Path::extname($filename);
 		$amd = !in_array($extension, array('.js', '.css'/* more? */));
-		$package = '';
 		if ($amd) $filename .= '.js';
 
+		$package = '';
 		foreach ($this->_alias as $alias => $url){
 			$len = strlen($alias);
 			if (substr($filename, 0, $len) == $alias){
@@ -46,111 +46,165 @@ class Packager {
 		}
 
 		$filename = Path::resolve($this->_baseurl, $filename);
-
 		if (isset($this->_files[$filename])) return;
 
-		$code = file_get_contents($filename);
-		$module = array(
-			'filename' => $filename,
-			'content' => $code,
-			'package' => $package,
-			'amd' => $amd
-		);
-
-		// TODO: analyze factory function body for require()
-
 		/*
-		define(function(){
-		define('ID', function(){
-		define('ID', ['first', 'second', 'third'], function(){
-		define(['first', 'second', 'third'], function(){
-		define([
-			'first', 'second', 'thir]d'], function(){
-		define([
-			'first', /*comment * / 'second',
-			'fourth' // more comments
-		], function(){
+		Syntaxis:
+			define:
+				define(function(){...
+				define('ID', function(){...
+				define('ID', ['first', 'second', 'third'], function(){..
+				define(['first', 'second', 'third'], function(){...
+			require:
+				require('module');
+				require(['module1', 'module2', ...]);
 		*/
 
+		$content = file_get_contents($filename);
 		$deps = array();
 		$_id = '';
-		$start = $amd ? strpos($code, 'define') : false;
+		$amd = $amd && (strpos($content, 'define') !== false);
 
-		if ($start !== false){
+		if ($amd){
 
-			$current = strpos($code, '(', $start);
-			$length = strlen($code);
-			$char = '';
+			$info = $this->analyze($content);
+			$code = $info['code'];
+			$arrays = $info['arrays'];
+			$strings = $info['strings'];
 
-			$string = false;
-			$array = false;
-
-			$dep = '';
-
-			if ($current) while (true){
-				$last = $char;
-				$char = substr($code, $current++, 1);
-
-				// Are we finished?
-				if (!$string && $char == ']'
-					|| $current > $length
-					|| substr($code, $current, 8) == 'function'
-				) break;
-
-				// line comments
-				if (!$string && $char == '/' && $last == '/'){
-					$current = strpos($code, "\n", $current) + 1;
-					continue;
-				}
-
-				// other comments
-				if (!$string && $char == '*' && $last == '/'){
-					$current = strpos($code, '*/', $current) + 2;
-					continue;
-				}
-
-				// Arrays
-				if (!$string){
-					if ($char == '[') $array = true;
-					if ($char == ']') $array = false;
-				}
-
-				// don't want to find the end in a string, so keep track of strings
-				$stringStartEnd = (($char == '"' || $char == "'") && $last != '\\');
-				if ($stringStartEnd){
-					$string = ($string == $char) ? false : $char;
-				}
-
-				// We're collecting the first argument: the id string
-				if ($string && !$stringStartEnd && !$array) $_id .= $char;
-
-				// Collect dependencies
-				if ($array){
-					if ($string && !$stringStartEnd) $dep .= $char;
-					if (!$string && $stringStartEnd){
-						$deps[] = $dep;
-						$dep = '';
-					}
-				}
-
+			// define(id?, dependencies?, factory)
+			$defStart = strpos($code, 'define(') + 7;
+			if (isset($strings[$defStart])){
+				$_id = $strings[$defStart];
+				$defStart += strlen($strings[$defStart]) + 3; // ",[
 			}
+			
+			if (isset($arrays[$defStart])){
+				$_deps = $this->lookupArrayStrings($arrays[$defStart], $defStart, $strings);
+				foreach ($_deps as $dep) $deps[] = $dep;
+			}
+
+			// require(module) / require(modules)
+			$len = strlen($code);
+			$i = $defStart;
+			do {
+				$i = strpos($code, 'require(', $i);
+				if ($i === false) break;
+				else $i += 8;
+				if (isset($strings[$i])) $deps[] = $strings[$i];
+				else if (isset($arrays[$i])){
+					$_deps = $this->lookupArrayStrings($arrays[$i], $i, $strings);
+					foreach ($_deps as $dep) $deps[] = $dep;
+				}
+			} while ($i < $len);
 
 		}
 
 		if ($_id) $id = $_id;
-		$module['id'] = $id;
 
 		foreach ($deps as &$dep){
-			if (substr($dep, 0, strpos($dep, '/')) != $package && substr($dep, 0, 1) == '.')
-				$dep = Path::resolve($id . '/../', $dep);
+			if (substr($dep, 0, strpos($dep, '/')) != $package
+				&& substr($dep, 0, 1) == '.'
+			) $dep = Path::resolve($id . '/../', $dep);
 		}
-		$module['dependencies'] = $deps;
 
-		$this->_modules[$id] = $module;
+		$this->_modules[$id] = array(
+			'filename' => $filename,
+			'content' => $content,
+			'package' => $package,
+			'amd' => $amd,
+			'id' => $id,
+			'dependencies' => $deps
+		);
+
 		$this->_files[$filename] = $id;
 
 		if (count($deps)) $this->req($deps);
+	}
 
+	protected function analyze($code){
+		$string = false;
+		$array = false;
+		$char = '';
+		$rchar = '';
+		$count = 0;
+
+		$strings = array();
+		$arrays = array();
+		$return = '';
+
+		for ($current = 0, $len = strlen($code); $current < $len; $current++){
+			$char = substr($code, $current, 1);
+			$next = substr($code, $current + 1, 1);
+
+			// strip line comments
+			if (!$string && $char == '/' && $next == '/'){
+				$current = strpos($code, "\n", $current);
+				continue;
+			}
+
+			// strip other comments
+			if (!$string && $char == '/' && $next == '*'){
+				$current = strpos($code, '*/', $current) + 1;
+				continue;
+			}
+
+			// Strip whitespace
+			if (!$string && ($char == ' ' || $char == "\n" || $char == "\t" || $char == "\r" || $char == "\v" || $char == "\f")){
+				continue;
+			}
+
+			$last = $rchar;
+			$rchar = $char;
+
+			// Arrays
+			if (!$string){
+				if ($char == '[' && ($last == '(' || $last == ',' || $last == '=')) $array = $count;
+				if ($char == ']') $array = false;
+			}
+			if ($array && $count > $array){
+				if (!isset($arrays[$array])) $arrays[$array] = '';
+				$arrays[$array] .= $char;
+			}
+
+			// Collect strings
+			$stringStartEnd = false;
+			if (($char == '"' || $char == "'") && !$string){
+				$string = $char;
+				$stringStart = $count;
+				$stringStartEnd = true;
+			}
+			if (!$stringStartEnd && $char == $string && $last != '\\'){
+				$string = false;
+				$stringStart = false;
+				$stringStartEnd = true;
+			}
+			if ($string && !$stringStartEnd){
+				if (!isset($strings[$stringStart])) $strings[$stringStart] = '';
+				$strings[$stringStart] .= $char;
+			}
+
+			$return .= $char;
+			$count++;
+		}
+
+		return array(
+			'strings' => $strings,
+			'arrays' => $arrays,
+			'code' => $return
+		);
+	}
+
+	private function lookupArrayStrings($rawArray, $start, $strings){
+		$i = 0;
+		$array = array();
+		$len = strlen($rawArray);
+		do {
+			if (isset($strings[$i + $start + 1])) $array[] = $strings[$i + $start + 1];
+			$i = strpos($rawArray, ',', $i);
+			if ($i === false) break;
+		} while (++$i < $len);
+		return $array;
 	}
 
 	public function output($glue = "\n\n"){

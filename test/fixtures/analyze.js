@@ -13,5 +13,8 @@ define([
 
 	String['foo'] = 'bla';
 
+	var arr = [1, '2 3', 4];
+	Array(['foo bar']);
+
 	return arguments;
 });

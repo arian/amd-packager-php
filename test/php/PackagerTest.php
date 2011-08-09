@@ -41,11 +41,11 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCustomID(){
-		
+
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('idtest'));
-		
+
 		$loaded = $packager->loaded();
 
 		$this->assertTrue(isset($loaded['customid']));
@@ -141,6 +141,56 @@ define('noid', function(){
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures . '/circular');
 		$packager->req(array('../../../loader', 'a'));
+
+	}
+
+	public function testRequireInBody(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$packager->req(array('requireInBody'));
+
+		$deps = $packager->dependencies();
+		$this->assertEquals(array(
+			'one',
+			'two',
+			'three',
+			'simple'
+		), $deps['requireInBody']);
+
+	}
+
+	public function testAnalyze(){
+		$class = new ReflectionClass('Packager');
+		$method = $class->getMethod('analyze');
+		$method->setAccessible(true);
+
+		$packager = new Packager();
+		$info = $method->invoke($packager, file_get_contents($this->fixtures . '/analyze.js'));
+
+		$this->assertEquals(
+			array(
+				8 => '../Core/Class',
+				24 => '../Utility/typeOf',
+				44 => '../Host/Array',
+				60 => '../Host/String',
+				77 => '../Utility/uniqueID',
+				152 => 'foo',
+				159 => 'bla',
+				175 => '2 3',
+				191 => 'foo bar'
+			),
+			$info['strings']
+		);
+
+		$this->assertEquals(
+			array(
+				7 => "'../Core/Class','../Utility/typeOf','../Host/Array','../Host/String','../Utility/uniqueID'",
+				172 => "1,'2 3',4",
+				190 => "'foo bar'"
+			),
+			$info['arrays']
+		);
 
 	}
 
