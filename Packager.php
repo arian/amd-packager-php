@@ -149,7 +149,7 @@ class Packager {
 
 		if ($amd){
 
-			$info = $this->analyze($content);
+			$info = $this->_analyze($content);
 			$code = $info['code'];
 			$arrays = $info['arrays'];
 			$strings = $info['strings'];
@@ -162,7 +162,7 @@ class Packager {
 			}
 
 			if (isset($arrays[$defStart])){
-				$_deps = $this->lookupArrayStrings($arrays[$defStart], $defStart, $strings);
+				$_deps = $this->_lookupArrayStrings($arrays[$defStart], $defStart, $strings);
 				foreach ($_deps as $dep) $deps[] = $dep;
 			}
 
@@ -175,7 +175,7 @@ class Packager {
 				else $i += 8;
 				if (isset($strings[$i])) $deps[] = $strings[$i];
 				else if (isset($arrays[$i])){
-					$_deps = $this->lookupArrayStrings($arrays[$i], $i, $strings);
+					$_deps = $this->_lookupArrayStrings($arrays[$i], $i, $strings);
 					foreach ($_deps as $dep) $deps[] = $dep;
 				}
 			} while ($i < $len);
@@ -204,7 +204,7 @@ class Packager {
 		if (count($deps)) $this->req($deps);
 	}
 
-	protected function analyze($code){
+	protected function _analyze($code){
 		$string = false;
 		$array = false;
 		$char = '';
@@ -277,7 +277,7 @@ class Packager {
 		);
 	}
 
-	private function lookupArrayStrings($rawArray, $start, $strings){
+	private function _lookupArrayStrings($rawArray, $start, $strings){
 		$i = 0;
 		$array = array();
 		$len = strlen($rawArray);

@@ -162,7 +162,7 @@ define('noid', function(){
 
 	public function testAnalyze(){
 		$class = new ReflectionClass('Packager');
-		$method = $class->getMethod('analyze');
+		$method = $class->getMethod('_analyze');
 		$method->setAccessible(true);
 
 		$packager = new Packager();
