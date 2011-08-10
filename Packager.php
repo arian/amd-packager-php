@@ -14,19 +14,101 @@ class Packager {
 		$this->_baseurl = dirname(__FILE__);
 	}
 
+	/**
+	 * Sets the base path where ->req() and ->addAlias methos are relative to
+	 * If the baseurl is not set, it will default to the directory of this
+	 * Packager.php file
+	 *
+	 * @param string $url
+	 * @return Packager
+	 */
 	public function setBaseUrl($url){
 		$this->_baseurl = $url;
 		return $this;
 	}
 
+	/**
+	 * Adds an alias.
+	 *
+	 * <code>
+	 * $packager->addAlias('Test', 'path/to/tests');
+	 * $packager->req(array('Test/Array'));
+	 * </code>
+	 *
+	 * @param string $alias
+	 * @param string $url
+	 * @return Packager
+	 */
 	public function addAlias($alias, $url){
 		$this->_alias[$alias] = $url;
 		return $this;
 	}
 
+	/**
+	 * Require the desired modules.
+	 * The module ids are the filenames relative to the baseurl.
+	 *
+	 * <code>
+	 * $packager->req(array('Core/DOM/Node', 'Core/Array', 'More/Drag'));
+	 * </code>
+	 *
+	 * @param array $ids
+	 * @return Packager
+	 */
 	public function req(array $ids){
 		foreach ($ids as $id) if (!in_array($id, $this->_skip)) $this->_req($id);
 		return $this;
+	}
+
+	/**
+	 * Generates the concatenated module content and gives every define() an ID
+	 *
+	 * @param string $glue optional The glue which joins the code of the different modules together
+	 * @return string
+	 */
+	public function output($glue = "\n\n"){
+		$code = array();
+		foreach ($this->_modules as $module){
+			$content = $module['content'];
+
+			if ($module['amd']){
+				$content = preg_replace('/define\((\[|function)/', "define('" . $module['id'] . "', $1", $content);
+			}
+
+			$code[] = $content;
+		}
+		return implode($glue, $code);
+	}
+
+	/**
+	 * Gives an associated array with all loaded modules. The keys are the
+	 * Module IDs while the value is an array with the module information.
+	 * Those arrays contain the url, id and dependencies
+	 *
+	 * @return array
+	 */
+	public function loaded(){
+		return $this->_modules;
+	}
+
+	/**
+	 * Lists the dependencies for each module
+	 *
+	 * @return array
+	 */
+	public function dependencies(){
+		$deps = array();
+		foreach ($this->_modules as $id => $module) $deps[$id] = $module['dependencies'];
+		return $deps;
+	}
+
+	/**
+	 * Lists the loaded modules
+	 *
+	 * @return array
+	 */
+	public function modules(){
+		return array_values($this->_files);
 	}
 
 	protected function _req($id){
@@ -78,7 +160,7 @@ class Packager {
 				$_id = $strings[$defStart];
 				$defStart += strlen($strings[$defStart]) + 3; // ",[
 			}
-			
+
 			if (isset($arrays[$defStart])){
 				$_deps = $this->lookupArrayStrings($arrays[$defStart], $defStart, $strings);
 				foreach ($_deps as $dep) $deps[] = $dep;
@@ -109,11 +191,11 @@ class Packager {
 		}
 
 		$this->_modules[$id] = array(
-			'filename' => $filename,
-			'content' => $content,
+			'id' => $id,
+			'url' => $filename,
 			'package' => $package,
 			'amd' => $amd,
-			'id' => $id,
+			'content' => $content,
 			'dependencies' => $deps
 		);
 
@@ -205,34 +287,6 @@ class Packager {
 			if ($i === false) break;
 		} while (++$i < $len);
 		return $array;
-	}
-
-	public function output($glue = "\n\n"){
-		$code = array();
-		foreach ($this->_modules as $module){
-			$content = $module['content'];
-			
-			if ($module['amd']){
-				$content = preg_replace('/define\((\[|function)/', "define('" . $module['id'] . "', $1", $content);
-			}
-			
-			$code[] = $content;
-		}
-		return implode($glue, $code);
-	}
-
-	public function loaded(){
-		return $this->_modules;
-	}
-
-	public function dependencies(){
-		$deps = array();
-		foreach ($this->_modules as $id => $module) $deps[$id] = $module['dependencies'];
-		return $deps;
-	}
-	
-	public function modules(){
-		return array_values($this->_files);
 	}
 
 }
