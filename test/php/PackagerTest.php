@@ -71,12 +71,12 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		$packager->setBaseUrl($this->fixtures);
 		$packager->req(array('noid'));
 
-$expected = "
-define('noid', function(){
+		$expected = "\n"
+		. "define('noid', function(){\n"
+		. "\n"
+		. "});\n"
+		. "\n";
 
-});
-
-";
 		$actual = $packager->output();
 		$this->assertEquals($expected, $actual);
 	}
@@ -160,6 +160,22 @@ define('noid', function(){
 
 	}
 
+	public function testObjectAsFactory(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$packager->req(array('objectfactory'));
+
+		$expected = "\n"
+		. "define('objectfactory', {\n"
+		. "	a: 1,\n"
+		. "	b: 2\n"
+		. "});\n";
+
+		$this->assertEquals($expected, $packager->output());
+
+	}
+
 	public function testAnalyze(){
 		$class = new ReflectionClass('Packager');
 		$method = $class->getMethod('_analyze');
@@ -178,7 +194,9 @@ define('noid', function(){
 				152 => 'foo',
 				159 => 'bla',
 				175 => '2 3',
-				191 => 'foo bar'
+				191 => 'foo bar',
+				233 => 'four',
+				249 => '[not an array] and {not an object}'
 			),
 			$info['strings']
 		);

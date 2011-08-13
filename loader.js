@@ -41,7 +41,7 @@ if (!require) require = function(ids, callback_, _relativeTo){
 	for (var i = 0; i < ids.length; i++){
 		var id = ids[i], module = modules[id];
 		if (module && loaded[id] == null){
-			var factory = module.factory, ideps = module.deps, deps = [], exports;
+			var ideps = module.deps, deps = [], exports, result = module.factory;
 			for (var j = 0; j < ideps.length; j++){
 				var idep = ideps[j], dep;
 				if (idep == 'require') dep = module.require;
@@ -50,8 +50,8 @@ if (!require) require = function(ids, callback_, _relativeTo){
 				else dep = require(ideps[j]);
 				deps.push(dep);
 			}
-			loaded[id] = (typeof factory == 'function') ? factory.apply(this, deps) : factory;
-			if (loaded[id] == null) loaded[id] = exports;
+			if (typeof result == 'function') result = result.apply(this, deps);
+			loaded[id] = result != null ? result : exports;
 		}
 		modules_.push(loaded[id]);
 	}

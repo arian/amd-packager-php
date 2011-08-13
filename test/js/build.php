@@ -14,7 +14,9 @@ $packager->req(array(
 	'modules/require',
 	'modules/a',
 	'modules/module',
-	'modules/argslength'
+	'modules/argslength',
+
+	'objectfactory'
 ));
 
 header('Content-Type: application/javascript');

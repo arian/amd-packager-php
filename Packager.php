@@ -72,7 +72,7 @@ class Packager {
 			$content = $module['content'];
 
 			if ($module['amd']){
-				$content = preg_replace('/define\((\[|function)/', "define('" . $module['id'] . "', $1", $content);
+				$content = preg_replace('/define\((\[|\{|function)/', "define('" . $module['id'] . "', $1", $content);
 			}
 
 			$code[] = $content;
@@ -137,6 +137,7 @@ class Packager {
 				define('ID', function(){...
 				define('ID', ['first', 'second', 'third'], function(){..
 				define(['first', 'second', 'third'], function(){...
+				define({...});
 			require:
 				require('module');
 				require(['module1', 'module2', ...]);

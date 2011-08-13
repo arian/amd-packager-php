@@ -16,5 +16,13 @@ define([
 	var arr = [1, '2 3', 4];
 	Array(['foo bar']);
 
+	var obj = {a: 1, b: 2};
+	Array({
+		c: 3,
+		d: 'four'
+	});
+
+	var str = '[not an array] and {not an object}';
+
 	return arguments;
 });
