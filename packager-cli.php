@@ -66,18 +66,18 @@ if (isset($options['baseurl'])) $packager->setBaseUrl($options['baseurl']);
 
 if ($options['loader']) array_unshift($requires, 'loader.js');
 
-$packager->req($requires);
+$builder = $packager->req($requires);
 
 if ($method == 'output' || $method == 'modules'){
-	warn("\nLoaded Modules:\n  " . implode("\n  ", $packager->modules()) . "\n\n");
+	warn("\nLoaded Modules:\n  " . implode("\n  ", $builder->modules()) . "\n\n");
 }
 
 if ($method == 'output'){
-	$output = $packager->output();
+	$output = $builder->output();
 	if ($output_file) file_put_contents ($output_file, $output);
 	else echo $output;
 } elseif ($method == 'dependencies'){
-	$modules = $packager->dependencies();
+	$modules = $builder->dependencies();
 
 	$str = '';
 	foreach ($modules as $id => $deps){

@@ -14,9 +14,9 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('simple'));
+		$builder = $packager->req(array('simple'));
 
-		$loaded = $packager->loaded();
+		$loaded = $builder->loaded();
 
 		$this->assertEquals(1, count($loaded));
 		$this->assertTrue(isset($loaded['simple']));
@@ -27,7 +27,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('one'));
+		$builder = $packager->req(array('one'));
 
 		$this->assertEquals(array(
 			'one' => array(
@@ -36,7 +36,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 			),
 			'two' => array(),
 			'three' => array()
-		), $packager->dependencies());
+		), $builder->dependencies());
 
 	}
 
@@ -44,9 +44,9 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('idtest'));
+		$builder = $packager->req(array('idtest'));
 
-		$loaded = $packager->loaded();
+		$loaded = $builder->loaded();
 
 		$this->assertTrue(isset($loaded['customid']));
 
@@ -56,29 +56,13 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('with.dots.in.filename'));
+		$builder = $packager->req(array('with.dots.in.filename'));
 
-		$loaded = $packager->loaded();
+		$loaded = $builder->loaded();
 
 		$this->assertEquals(1, count($loaded));
 		$this->assertTrue(isset($loaded['with.dots.in.filename']));
 
-	}
-
-	public function testNoID(){
-
-		$packager = new Packager;
-		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('noid'));
-
-		$expected = "\n"
-		. "define('noid', function(){\n"
-		. "\n"
-		. "});\n"
-		. "\n";
-
-		$actual = $packager->output();
-		$this->assertEquals($expected, $actual);
 	}
 
 	public function testDOMNode(){
@@ -86,7 +70,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
 		$packager->addAlias('Core', 'MooTools');
-		$packager->req(array('Core/DOM/Node'));
+		$builder = $packager->req(array('Core/DOM/Node'));
 
 		$this->assertEquals(array(
 			'Core/DOM/Node' => array(
@@ -110,7 +94,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 				'Core/Core/Host',
 			),
 			'Core/Utility/uniqueID' => array (),
-		), $packager->dependencies());
+		), $builder->dependencies());
 
 	}
 
@@ -119,7 +103,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
 		$packager->addAlias('PackageA', 'packageA')->addAlias('PackageB', 'packageB');
-		$packager->req(array('PackageA/a'));
+		$builder = $packager->req(array('PackageA/a'));
 
 		$this->assertEquals(array(
 			'PackageA/a' => array(
@@ -130,7 +114,7 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 			'PackageA/b' => array(),
 			'PackageA/c' => array(),
 			'PackageB/b' => array(),
-		), $packager->dependencies());
+		), $builder->dependencies());
 
 	}
 
@@ -148,31 +132,15 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('requireInBody'));
+		$builder = $packager->req(array('requireInBody'));
 
-		$deps = $packager->dependencies();
+		$deps = $builder->dependencies();
 		$this->assertEquals(array(
 			'one',
 			'two',
 			'three',
 			'simple'
 		), $deps['requireInBody']);
-
-	}
-
-	public function testObjectAsFactory(){
-
-		$packager = new Packager;
-		$packager->setBaseUrl($this->fixtures);
-		$packager->req(array('objectfactory'));
-
-		$expected = "\n"
-		. "define('objectfactory', {\n"
-		. "	a: 1,\n"
-		. "	b: 2\n"
-		. "});\n";
-
-		$this->assertEquals($expected, $packager->output());
 
 	}
 

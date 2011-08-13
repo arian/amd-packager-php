@@ -1,6 +1,7 @@
 <?php
 
 include_once dirname(__FILE__) . '/Path.php';
+include_once dirname(__FILE__) . '/Builder.php';
 
 class Packager {
 
@@ -53,62 +54,11 @@ class Packager {
 	 * </code>
 	 *
 	 * @param array $ids
-	 * @return Packager
+	 * @return Packager_Builder
 	 */
 	public function req(array $ids){
 		foreach ($ids as $id) if (!in_array($id, $this->_skip)) $this->_req($id);
-		return $this;
-	}
-
-	/**
-	 * Generates the concatenated module content and gives every define() an ID
-	 *
-	 * @param string $glue optional The glue which joins the code of the different modules together
-	 * @return string
-	 */
-	public function output($glue = "\n\n"){
-		$code = array();
-		foreach ($this->_modules as $module){
-			$content = $module['content'];
-
-			if ($module['amd']){
-				$content = preg_replace('/define\((\[|\{|function)/', "define('" . $module['id'] . "', $1", $content);
-			}
-
-			$code[] = $content;
-		}
-		return implode($glue, $code);
-	}
-
-	/**
-	 * Gives an associated array with all loaded modules. The keys are the
-	 * Module IDs while the value is an array with the module information.
-	 * Those arrays contain the url, id and dependencies
-	 *
-	 * @return array
-	 */
-	public function loaded(){
-		return $this->_modules;
-	}
-
-	/**
-	 * Lists the dependencies for each module
-	 *
-	 * @return array
-	 */
-	public function dependencies(){
-		$deps = array();
-		foreach ($this->_modules as $id => $module) $deps[$id] = $module['dependencies'];
-		return $deps;
-	}
-
-	/**
-	 * Lists the loaded modules
-	 *
-	 * @return array
-	 */
-	public function modules(){
-		return array_values($this->_files);
+		return new Packager_Builder($this->_modules);
 	}
 
 	protected function _req($id){

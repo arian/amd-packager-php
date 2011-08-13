@@ -4,7 +4,7 @@ include dirname(__FILE__)  . '/../../Packager.php';
 
 $packager = new Packager;
 $packager->setBaseUrl(dirname(__FILE__) . '/../fixtures');
-$packager->req(array(
+$builder = $packager->req(array(
 	'../../loader.js',
 
 	'MooTools/DOM/Node',
@@ -21,6 +21,6 @@ $packager->req(array(
 
 header('Content-Type: application/javascript');
 
-$output = $packager->output();
+$output = $builder->output();
 
 echo $output;

@@ -50,17 +50,17 @@ $packager->setBaseUrl(__DIR__ . '/../foo/bar');
 $packager->addAlias('Core', 'MooTools/Core');
 $packager->addAlias('Tests', 'MooTools/Tests');
 
-// Require
+// Require. Returns a Packager_Builder instance
 
-$packager->req(array('Core/DOM/Node', 'Tests/Host/Array'));
+$builder = $packager->req(array('Core/DOM/Node', 'Tests/Host/Array'));
 
 // Output
 
 echo '/* These modules are loaded:';
-echo implode("\n - ", $packager->modules());
+echo implode("\n - ", $builder->modules());
 echo "\n*/\n\n";
 
-echo $packager->output();
+echo $builder->output();
 
 ```
 
@@ -68,7 +68,7 @@ Unit Tests
 ----------
 
 See the `test` folder.
-Run it with `phpunit PackagerTest.php`
+Run it with `phpunit test`
 
 Requirements
 ------------
