@@ -11,13 +11,13 @@ class PathTest extends PHPUnit_Framework_TestCase {
 		$resolved = Path::resolve('foo/../../bar', '../one/two', './three');
 		$this->assertEquals('../one/two/three', $resolved);
 
-		$resolved = Path::resolve('foo/bar', '//abc');
+		$resolved = Path::resolve('foo/bar', './/abc');
 		$this->assertEquals('foo/bar/abc', $resolved);
 
-		$resolved = Path::resolve('../../path/to/Source', '/filename.js');
+		$resolved = Path::resolve('../../path/to/Source', './filename.js');
 		$this->assertEquals('../../path/to/Source/filename.js', $resolved);
 
-		$resolved = Path::resolve('../../../path/to/Source', '/filename.js');
+		$resolved = Path::resolve('../../../path/to/Source', './filename.js');
 		$this->assertEquals('../../../path/to/Source/filename.js', $resolved);
 
 	}

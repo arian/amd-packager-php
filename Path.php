@@ -37,6 +37,7 @@ class Path {
 	 */
 	public static function resolve(){
 		$args = func_get_args();
+		for ($l = count($args); --$l;) if (substr($args[$l], 0, 1) == '/') return $args[$l];
 		$_path = explode('/', implode('/', $args));
 		$path = array();
 		foreach ($_path as $part) if ($part) $path[] = $part;

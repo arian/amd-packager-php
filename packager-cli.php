@@ -64,13 +64,15 @@ $packager = new Packager;
 
 $options = include $options_file;
 
+if (isset($options['baseurl'])){
+	$packager->setBaseUrl($options['baseurl']);
+}
+
 if (isset($options['paths'])) foreach ($options['paths'] as $alias => $path){
 	$packager->addAlias($alias, $path);
 }
 
-if (isset($options['baseurl'])) $packager->setBaseUrl($options['baseurl']);
-
-if ($options['loader']) array_unshift($requires, 'loader.js');
+if ($options['loader']) array_unshift($requires, dirname(__FILE__) . '/loader.js');
 
 $builder = $packager->req($requires);
 
