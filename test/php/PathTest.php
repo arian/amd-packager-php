@@ -20,6 +20,9 @@ class PathTest extends PHPUnit_Framework_TestCase {
 		$resolved = Path::resolve('../../../path/to/Source', './filename.js');
 		$this->assertEquals('../../../path/to/Source/filename.js', $resolved);
 
+		$resolved = Path::resolve('/path/to/Source', '/other/', './filename.js');
+		$this->assertEquals('/other/filename.js', $resolved);
+
 	}
 
 	public function testDirname(){
