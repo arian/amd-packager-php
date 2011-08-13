@@ -4,7 +4,7 @@
 include_once dirname(__FILE__) . '/Packager.php';
 
 $args = array_slice($argv, 1);
-$options_file = 'options.php';
+$options_file = null;
 $method = 'output';
 $output_file = null;
 $graph_file = null;
@@ -62,17 +62,18 @@ if (empty($requires)) help();
 
 $packager = new Packager;
 
-$options = include $options_file;
+$options = $options_file ? (include $options_file) : array();
 
-if (isset($options['baseurl'])){
-	$packager->setBaseUrl($options['baseurl']);
-}
+$packager->setBaseUrl(
+	isset($options['baseurl']) ? $options['baseurl'] : getcwd()
+);
+
 
 if (isset($options['paths'])) foreach ($options['paths'] as $alias => $path){
 	$packager->addAlias($alias, $path);
 }
 
-if ($options['loader']) array_unshift($requires, dirname(__FILE__) . '/loader.js');
+if (!empty($options['loader'])) array_unshift($requires, dirname(__FILE__) . '/loader.js');
 
 $builder = $packager->req($requires);
 

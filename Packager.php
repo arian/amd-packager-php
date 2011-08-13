@@ -71,7 +71,7 @@ class Packager {
 		foreach ($this->_alias as $alias => $url){
 			$len = strlen($alias);
 			if (substr($filename, 0, $len) == $alias){
-				$filename = Path::resolve($this->_baseurl, $url, substr($filename, $len + 1));
+				$filename = Path::resolve($url, substr($filename, $len + 1));
 				$package = $alias;
 				break;
 			}
