@@ -18,7 +18,7 @@ class GraphTest extends PHPUnit_Framework_TestCase {
 		$builder = $packager->req(array('DOM/Node'));
 
 		$graph = new Packager_Graph($builder);
-		$graph->output(dirname(__FILE__) . '/hello.svg', 'svg');
+		$graph->output(dirname(__FILE__) . '/hello.png');
 
 	}
 

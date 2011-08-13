@@ -10,12 +10,13 @@ CLI
 	packager-cli.php [options] <modules>
 
 	Options:
-	  -h --help        Show this help
-	  --options        Specify another options file (defaults to options.php)
-	  --output         The file the output should be written to
-	  --modules / --list
-					   List the modules
-	  --dependencies   List the dependencies map
+	  -h --help             Show this help
+	  --options             Specify another options file (defaults to options.php)
+	  --output              The file the output should be written to
+	  --modules --list      List the modules
+	  --dependencies        List the dependencies map
+	  --graph               Create a structural dependency graph
+		                    and write it to this file
 
 ### Tip:
 
@@ -70,11 +71,6 @@ Unit Tests
 See the `test` folder.
 Run it with `phpunit test`
 
-Requirements
-------------
-
-- PHP 5.2 (tested on 5.3, but _should_ work on 5.2)
-
 JavaScript Examples:
 --------------------
 
@@ -113,6 +109,19 @@ The packager will add an ID to each `define()` function an ID so when each
 `define()` is in the same file, everything continues to work. If the module
 already had an ID, it will not replace it.
 
+
+Analysis
+--------
+
+With the `--graph` cli option, a dependency graph can be made. These can be
+generated to do some analysis on your modules and make better decisions.
+
+Alternatively the `Packager_Graph` class in Graph.php can be used directly too.
+For this graph [Graphviz](http://www.graphviz.org/) is required.
+
+![Dependency Graph](https://raw.github.com/arian/amd-packager-php/master/test/php/hello.png)
+
+
 Notes
 -----
 
@@ -122,6 +131,18 @@ Some restrictions are:
 
 - It does not execute JavaScript, so the `define` function MUST be in the literal form. It also MUST use square brackets (`[` and `]`) for dependencies.
 
+
+Requirements
+------------
+
+- PHP 5.2 (tested on 5.3, but _should_ work on 5.2)
+- Graphviz (for the `--graph` option or Graph.php class)
+
+To installation for graphviz is easy for debian(-like) systems with:
+
+	sudo apt-get install graphviz
+
+For other systems you should look at the [graphviz download page](http://www.graphviz.org/Download..php).
 
 License
 -------
