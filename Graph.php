@@ -20,10 +20,10 @@ class Packager_Graph {
 
 	protected function _generateDigraph(){
 
-		$graph = 'digraph finite_state_machine { size="8,5"' . PHP_EOL;
+		$graph = 'digraph finite_state_machine {' . PHP_EOL;
 
 		foreach ($this->_builder->dependencies() as $id => $deps){
-			foreach ($deps as $dep) $graph .= '"' . $dep . '" -> "' . $id . '";' . PHP_EOL;
+			foreach ($deps as $dep) $graph .= '"' . addslashes($dep) . '" -> "' . addslashes($id) . '";' . PHP_EOL;
 		}
 
 		$graph .= '}';
