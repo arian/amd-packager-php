@@ -81,13 +81,16 @@ class Packager_Builder {
 	protected function _output($modules, $glue = "\n\n"){
 		$code = array();
 		foreach ($modules as $module){
-			$module = $this->_setid($module);
+			$module = $this->_fix($module);
 			$code[] = $module['content'];
 		}
 		return implode($glue, $code);
 	}
 
-	protected function _setid($module){
+	protected function _fix($module){
+		if (empty($module['content']) && !empty($module['url'])){
+			$module['content'] = file_get_contents($module['url']);
+		}
 		if ($module['amd']){
 			$module['content'] = preg_replace('/define\((\[|\{|function)/', "define('" . $module['id'] . "', $1", $module['content']);
 		}

@@ -17,9 +17,7 @@ class YAMLExporterTest extends PHPUnit_Framework_TestCase {
 		$packager->setBaseUrl($this->fixtures);
 		$builder = $packager->req(array('yaml/basic/three'));
 
-		$loaded = $builder->loaded();
-
-		$export = new YAMLExporter($loaded);
+		$export = new Packager_YAMLExporter($builder);
 		$export->setPackageJSON($this->fixtures . '/yaml/basic/package.json');
 
 		$export->save($this->fixtures . '/yaml/out');

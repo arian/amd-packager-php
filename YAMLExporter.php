@@ -1,6 +1,6 @@
 <?php
 
-class YAMLExporter {
+class Packager_YAMLExporter {
 
 	protected $_modules;
 	protected $_files = array();
@@ -8,8 +8,8 @@ class YAMLExporter {
 
 	public $srcfolder = 'Source';
 
-	public function __construct($modules){
-		$this->_modules = $modules;
+	public function __construct(Packager_Builder $builder){
+		$this->_modules = $builder->loaded();
 	}
 
 	public function setPackageJSON($filename){

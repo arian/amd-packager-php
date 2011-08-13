@@ -7,16 +7,18 @@ $args = array_slice($argv, 1);
 $options_file = 'options.php';
 $method = 'output';
 $output_file = null;
+$graph_file = null;
 
 function help(){
 	echo "\npackager-cli.php [options] <modules>\n\n"
 	   . "Options:\n"
-	   . "  -h --help        Show this help\n"
-	   . "  --options        Specify another options file (defaults to options.php)\n"
-	   . "  --output         The file the output should be written to\n"
-	   . "  --modules / --list\n"
-	   . "                   List the modules\n"
-	   . "  --dependencies   List the dependencies map\n"
+	   . "  -h --help             Show this help\n"
+	   . "  --options             Specify another options file (defaults to options.php)\n"
+	   . "  --output              The file the output should be written to\n"
+	   . "  --modules --list      List the modules\n"
+	   . "  --dependencies        List the dependencies map\n"
+	   . "  --graph               Create a structural dependency graph\n"
+	   . "                        and write it to this file\n"
 	   . "\n";
 	exit;
 }
@@ -39,6 +41,10 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 		break;
 		case '--output':
 			$output_file = $args[++$i];
+		break;
+		case '--graph':
+			$graph_file = $args[++$i];
+			$method = 'graph';
 		break;
 		case '--modules': case '--list':
 			$method = 'modules';
@@ -89,5 +95,11 @@ if ($method == 'output'){
 	$str .= "\n\n";
 
 	warn($str);
+}
 
+if ($graph_file){
+	include_once dirname(__FILE__) . '/Graph.php';
+	$graph = new Packager_Graph($builder);
+	$graph->output($graph_file);
+	warn("The dependency graph has been written to '" . $graph_file . "'\n");
 }
