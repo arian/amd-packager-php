@@ -67,7 +67,7 @@ class Packager_Builder {
 
 	/**
 	 * Concatenates the files by Package
-	 *
+	 * 
 	 * @param string $glue optional The glue which joins the code of the different modules together
 	 */
 	public function outputByPackage($glue = "\n\n"){
@@ -120,7 +120,7 @@ class Packager_Builder {
 
 	/**
 	 * Reduces the number of modules to the given ids and their dependencies
-	 *
+	 * 
 	 * @param array $ids
 	 * @return Packager_Builder
 	 */
