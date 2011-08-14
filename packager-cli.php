@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-include_once dirname(__FILE__) . '/Packager.php';
+include_once dirname(__FILE__) . '/lib/Packager.php';
 
 $args = array_slice($argv, 1);
 $options_file = null;
@@ -101,7 +101,7 @@ if ($method == 'output'){
 }
 
 if ($graph_file){
-	include_once dirname(__FILE__) . '/Graph.php';
+	include_once dirname(__FILE__) . '/lib/Graph.php';
 	$graph = new Packager_Graph($builder);
 	$graph->output($graph_file);
 	warn("The dependency graph has been written to '" . $graph_file . "'\n");

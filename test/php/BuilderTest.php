@@ -1,6 +1,6 @@
 <?php
 
-include_once dirname(__FILE__) . '/../../Packager.php';
+include_once dirname(__FILE__) . '/../../lib/Packager.php';
 
 class BuilderTest extends PHPUnit_Framework_TestCase {
 

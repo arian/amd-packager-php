@@ -1,7 +1,7 @@
 <?php
 
-include_once dirname(__FILE__) . '/../../Packager.php';
-include_once dirname(__FILE__) . '/../../Graph.php';
+include_once dirname(__FILE__) . '/../../lib/Packager.php';
+include_once dirname(__FILE__) . '/../../lib/Graph.php';
 
 class GraphTest extends PHPUnit_Framework_TestCase {
 

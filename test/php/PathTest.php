@@ -1,6 +1,6 @@
 <?php
 
-include_once dirname(__FILE__) . '/../../Path.php';
+include_once dirname(__FILE__) . '/../../lib/Path.php';
 
 class PathTest extends PHPUnit_Framework_TestCase {
 

@@ -1,7 +1,7 @@
 <?php
 
-include_once dirname(__FILE__) . '/../../Packager.php';
-include_once dirname(__FILE__) . '/../../YAMLExporter.php';
+include_once dirname(__FILE__) . '/../../lib/Packager.php';
+include_once dirname(__FILE__) . '/../../lib/YAMLExporter.php';
 
 class YAMLExporterTest extends PHPUnit_Framework_TestCase {
 

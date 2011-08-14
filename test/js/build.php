@@ -1,6 +1,6 @@
 <?php
 
-include dirname(__FILE__)  . '/../../Packager.php';
+include dirname(__FILE__)  . '/../../lib/Packager.php';
 
 $packager = new Packager;
 $packager->setBaseUrl(dirname(__FILE__) . '/../fixtures');
