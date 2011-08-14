@@ -19,7 +19,7 @@ $options = array(
 		'dojo/array',
 		'dojo/fx/Toggler'
 	),
-	'cache' => true,
+	'cache' => false,
 	'minifier' => array(
 		'yui' => '/home/arian/www/yuicompressor.jar',
 		'uglify-js' => true,
@@ -43,7 +43,7 @@ if (!empty($options['cache']) && file_exists($cache_file)){
 		$packager->addAlias($alias, $url);
 	}
 	$builder = $packager->req($options['modules']);
-	
+
 	if (!empty($options['cache'])){
 		file_put_contents($cache_file, $builder->toJSON());
 	}
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST'){
 		}
 
 		$zip->close();
-		
+
 		header('Content-Type: application/zip');
 		header('Content-Disposition: attachment; filename="packaged.zip"');
 
@@ -115,4 +115,3 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST'){
 	}
 
 }
-
