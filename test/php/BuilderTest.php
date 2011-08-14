@@ -173,4 +173,16 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testReduce(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$builder = $packager->req(array('basic/three'));
+
+		$builder->reduce(array('basic/two'));
+
+		$this->assertEquals(array('basic/two', 'basic/one'), $builder->modules());
+
+	}
+
 }
