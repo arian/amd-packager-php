@@ -63,6 +63,7 @@ class Packager {
 
 	protected function _req($id){
 		if (in_array($id, $this->_skip)) return;
+		if (strpos($id, '!') !== false) return;
 
 		$filename = $id;
 		$extension = Path::extname($filename);
