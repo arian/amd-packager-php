@@ -144,10 +144,10 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 			'PackageA' => "\n"
 				. "define('PackageA/a', ['./b', 'PackageA/c', 'PackageB/b'], function(b1, b2){\n"
 				. "	return 'a';\n"
-				. "});\n/*----*/\n"
+				. "});\n//----\n"
 				. "define('PackageA/b', function(){\n"
 				. "	return 'b';\n"
-				. "});\n/*----*/\n"
+				. "});\n//----\n"
 				. "define('PackageA/c', function(){\n"
 				. "	return 'c';\n"
 				. "});\n",
@@ -156,7 +156,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 				. "	return 'b';\n"
 				. "});\n");
 
-		$this->assertEquals($expected, $builder->outputByPackage('/*----*/'));
+		$this->assertEquals($expected, $builder->outputByPackage('//----'));
 
 	}
 

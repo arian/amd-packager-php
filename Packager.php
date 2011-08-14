@@ -57,11 +57,13 @@ class Packager {
 	 * @return Packager_Builder
 	 */
 	public function req(array $ids){
-		foreach ($ids as $id) if (!in_array($id, $this->_skip)) $this->_req($id);
+		foreach ($ids as $id) $this->_req($id);
 		return new Packager_Builder($this->_modules);
 	}
 
 	protected function _req($id){
+		if (in_array($id, $this->_skip)) return;
+
 		$filename = $id;
 		$extension = Path::extname($filename);
 		$amd = !in_array($extension, array('.js', '.css'/* more? */));
@@ -152,7 +154,7 @@ class Packager {
 
 		$this->_files[$filename] = $id;
 
-		if (count($deps)) $this->req($deps);
+		foreach ($deps as $_dep) $this->_req($_dep);
 	}
 
 	protected function _analyze($code){

@@ -1,5 +1,8 @@
 <?php
 
+include_once dirname(__FILE__) . '/Path.php';
+include_once dirname(__FILE__) . '/Builder.php';
+
 class Packager_YAMLExporter {
 
 	protected $_modules;
