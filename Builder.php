@@ -97,4 +97,25 @@ class Packager_Builder {
 		return $module;
 	}
 
+	// JSON encoding and decoding
+
+	/**
+	 * Encodes the modules as JSON so it can be used elsewhere or can be cached
+	 *
+	 * @return string JSON
+	 */
+	public function toJSON(){
+		return json_encode($this->_modules);
+	}
+
+	/**
+	 * Decodes a JSON object and returns a new Packager_Builder object
+	 *
+	 * @param string $json JSON
+	 * @return Packager_Builder
+	 */
+	static public function fromJSON($json){
+		return new self(json_decode($json, true));
+	}
+
 }

@@ -160,4 +160,17 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testSerialization(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$builder = $packager->req(array('simple'));
+
+		$json = $builder->toJSON();
+		$builder2 = Packager_Builder::fromJSON($json);
+
+		$this->assertEquals($builder->modules(), $builder2->modules());
+
+	}
+
 }
