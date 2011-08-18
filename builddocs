@@ -1,1 +1,1 @@
-phpdoc -f Packager.php,Path.php,YAMLExporter.php -t docs  --output HTML:frames:earthli -ti 'AMD Packager'
+phpdoc -d lib/ -t docs  --output HTML:frames:earthli -ti 'AMD Packager'
