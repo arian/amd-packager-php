@@ -67,7 +67,7 @@ class Packager_Builder {
 
 	/**
 	 * Concatenates the files by Package
-	 * 
+	 *
 	 * @param string $glue optional The glue which joins the code of the different modules together
 	 */
 	public function outputByPackage($glue = "\n\n"){
@@ -120,23 +120,21 @@ class Packager_Builder {
 
 	/**
 	 * Reduces the number of modules to the given ids and their dependencies
-	 * 
+	 *
 	 * @param array $ids
 	 * @return Packager_Builder
 	 */
-	public function reduce(array $ids, $_oldmodules = null){
-		if (!$_oldmodules){
-			$_oldmodules = $this->_modules;
-			$this->_modules = array();
-		}
-		$this->_reduce($ids, $_oldmodules);
+	public function reduce(array $ids){
+		$old = $this->_modules;
+		$this->_modules = array();
+		$this->_reduce($ids, $old);
 		return $this;
 	}
 
 	protected function _reduce($ids, $old){
 		foreach ($ids as $id) if (isset($old[$id]) && !isset($this->_modules[$id])){
 			$this->_modules[$id] = $old[$id];
-			$this->reduce($this->_modules[$id]['dependencies'], $old);
+			$this->_reduce($this->_modules[$id]['dependencies'], $old);
 		}
 	}
 
