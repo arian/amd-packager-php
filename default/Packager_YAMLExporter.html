@@ -3,7 +3,7 @@
   <html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<!-- template designed by Marco Von Ballmoos -->
-			<title>Docs For Class Packager</title>
+			<title>Docs For Class Packager_YAMLExporter</title>
 			<link rel="stylesheet" href="../media/stylesheet.css" />
 			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
 		</head>
@@ -12,7 +12,7 @@
 <h2 class="class-name"><img src="../media/images/Class_logo.png"
 														alt=" Class"
 														title=" Class"
-														style="vertical-align: middle"> Packager</h2>
+														style="vertical-align: middle"> Packager_YAMLExporter</h2>
 
 <a name="sec-description"></a>
 <div class="info-box">
@@ -26,7 +26,7 @@
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
 		<p class="notes">
-			Located in <a class="field" href="_Packager.php.html">/Packager.php</a> (line <span class="field">6</span>)
+			Located in <a class="field" href="_YAMLExporter.php.html">/YAMLExporter.php</a> (line <span class="field">6</span>)
 		</p>
 		
 				
@@ -49,15 +49,10 @@
 								</div>
 		<div class="info-box-body">
 			<div class="var-summary">
-																																																								<div class="var-title">
+																																																<div class="var-title">
 					<img src="../media/images/Variable.png" alt=" " />
 					<span class="var-type">mixed</span>
-					<a href="#$_alias" title="details" class="var-name">$_alias</a>
-				</div>
-																<div class="var-title">
-					<img src="../media/images/Variable.png" alt=" " />
-					<span class="var-type">mixed</span>
-					<a href="#$_baseurl" title="details" class="var-name">$_baseurl</a>
+					<a href="#$srcfolder" title="details" class="var-name">$srcfolder</a>
 				</div>
 																<div class="var-title">
 					<img src="../media/images/Variable.png" alt=" " />
@@ -72,7 +67,7 @@
 																<div class="var-title">
 					<img src="../media/images/Variable.png" alt=" " />
 					<span class="var-type">mixed</span>
-					<a href="#$_skip" title="details" class="var-name">$_skip</a>
+					<a href="#$_packagedata" title="details" class="var-name">$_packagedata</a>
 				</div>
 											</div>
 		</div>
@@ -90,41 +85,53 @@
 		</div>
 		<div class="info-box-body">			
 			<div class="method-summary">
-																																																																<div class="method-definition">
+																																																																																<div class="method-definition">
 					<img src="../media/images/Constructor.png" alt=" "/>
-											<span class="method-result">Packager</span>
+											<span class="method-result">Packager_YAMLExporter</span>
 										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type"><a href="../default/Packager_Builder.html">Packager_Builder</a></span>&nbsp;<span class="var-name">$builder</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#forceSaveFile" title="details" class="method-name">forceSaveFile</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$path</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$content</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#modules" title="details" class="method-name">modules</a>
 										()
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result"><a href="../default/Packager.html">Packager</a></span>
-										<a href="#addAlias" title="details" class="method-name">addAlias</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$alias</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result"><a href="../default/Packager_Builder.html">Packager_Builder</a></span>
-										<a href="#req" title="details" class="method-name">req</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$ids</span>)
-									</div>
-																<div class="method-definition">
-					<img src="../media/images/Method.png" alt=" "/>
-											<span class="method-result"><a href="../default/Packager.html">Packager</a></span>
-										<a href="#setBaseUrl" title="details" class="method-name">setBaseUrl</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
+											<span class="method-result">void</span>
+										<a href="#output" title="details" class="method-name">output</a>
+										()
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
-										<a href="#_analyze" title="details" class="method-name">_analyze</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$code</span>)
+										<a href="#package" title="details" class="method-name">package</a>
+										()
 									</div>
 																<div class="method-definition">
 					<img src="../media/images/Method.png" alt=" "/>
 											<span class="method-result">void</span>
-										<a href="#_req" title="details" class="method-name">_req</a>
-											(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+										<a href="#save" title="details" class="method-name">save</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$directory</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#setPackageData" title="details" class="method-name">setPackageData</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$key</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+																<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#setPackageJSON" title="details" class="method-name">setPackageJSON</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$filename</span>)
 									</div>
 											</div>
 		</div>
@@ -144,43 +151,21 @@
 					</div>
 		<div class="info-box-body">
 			
-<a name="var$_alias" id="$_alias"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<img src="../media/images/Variable.png" />
-		<span class="var-title">
-			<span class="var-type">mixed</span>
-			<span class="var-name">$_alias</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">9</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
-			</ul>
-	
-	
-		
-		
-
-</div>
-<a name="var$_baseurl" id="$_baseurl"><!-- --></A>
+<a name="var$srcfolder" id="$srcfolder"><!-- --></A>
 <div class="evenrow">
 
 	<div class="var-header">
 		<img src="../media/images/Variable.png" />
 		<span class="var-title">
 			<span class="var-type">mixed</span>
-			<span class="var-name">$_baseurl</span>
-						(line <span class="line-number">8</span>)
+			<span class="var-name">$srcfolder</span>
+			 = <span class="var-default"> 'Source'</span>			(line <span class="line-number">12</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">access:</span> public</li>
 			</ul>
 	
 	
@@ -196,7 +181,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$_files</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">11</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">9</span>)
 		</span>
 	</div>
 
@@ -218,7 +203,7 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$_modules</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">10</span>)
+						(line <span class="line-number">8</span>)
 		</span>
 	</div>
 
@@ -232,15 +217,15 @@
 		
 
 </div>
-<a name="var$_skip" id="$_skip"><!-- --></A>
+<a name="var$_packagedata" id="$_packagedata"><!-- --></A>
 <div class="oddrow">
 
 	<div class="var-header">
 		<img src="../media/images/Variable.png" />
 		<span class="var-title">
 			<span class="var-type">mixed</span>
-			<span class="var-name">$_skip</span>
-			 = <span class="var-default">array('require', 'exports', 'module')</span>			(line <span class="line-number">12</span>)
+			<span class="var-name">$_packagedata</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">10</span>)
 		</span>
 	</div>
 
@@ -283,9 +268,70 @@
 			</ul>
 	
 	<div class="method-signature">
-		<span class="method-result">Packager</span>
+		<span class="method-result">Packager_YAMLExporter</span>
 		<span class="method-name">
 			__construct
+		</span>
+					(<span class="var-type"><a href="../default/Packager_Builder.html">Packager_Builder</a></span>&nbsp;<span class="var-name">$builder</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../default/Packager_Builder.html">Packager_Builder</a></span>
+				<span class="var-name">$builder</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodforceSaveFile" id="forceSaveFile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">forceSaveFile</span> (line <span class="line-number">88</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			forceSaveFile
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$path</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$content</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$path</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$content</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmodules" id="modules"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">modules</span> (line <span class="line-number">29</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			modules
 		</span>
 				()
 			</div>
@@ -293,158 +339,140 @@
 		
 			
 	</div>
-<a name="methodaddAlias" id="addAlias"><!-- --></a>
+<a name="methodoutput" id="output"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">addAlias</span> (line <span class="line-number">43</span>)
+		<span class="method-title">output</span> (line <span class="line-number">83</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Adds an alias.</p>
-<p class="description"><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$packager</span><span class="src-sym">-&gt;</span><a href="../default/Packager.html#methodaddAlias">addAlias</a><span class="src-sym">(</span><span class="src-str">'Test'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'path/to/tests'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-var">$packager</span><span class="src-sym">-&gt;</span><a href="../default/Packager.html#methodreq">req</a><span class="src-sym">(</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'Test/Array'</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
-</ol></div></p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result"><a href="../default/Packager.html">Packager</a></span>
-		<span class="method-name">
-			addAlias
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$alias</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$alias</span>			</li>
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$url</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodreq" id="req"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">req</span> (line <span class="line-number">59</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Require the desired modules.</p>
-<p class="description"><p>The module ids are the filenames relative to the baseurl.</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$packager</span><span class="src-sym">-&gt;</span><a href="../default/Packager.html#methodreq">req</a><span class="src-sym">(</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'Core/DOM/Node'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'Core/Array'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'More/Drag'</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
-</ol></div></p></p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result"><a href="../default/Packager_Builder.html">Packager_Builder</a></span>
-		<span class="method-name">
-			req
-		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$ids</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">array</span>
-				<span class="var-name">$ids</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodsetBaseUrl" id="setBaseUrl"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">setBaseUrl</span> (line <span class="line-number">26</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Sets the base path where -&gt;req() and -&gt;addAlias methos are relative to  If the baseurl is not set, it will default to the directory of this  Packager.php file</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result"><a href="../default/Packager.html">Packager</a></span>
-		<span class="method-name">
-			setBaseUrl
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$url</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="method_analyze" id="_analyze"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<img src="../media/images/Method.png" />
-		<span class="method-title">_analyze</span> (line <span class="line-number">161</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
 		<span class="method-result">void</span>
 		<span class="method-name">
-			_analyze
+			output
 		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$code</span>)
+				()
 			</div>
 	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"></span>
-				<span class="var-name">$code</span>			</li>
-				</ul>
 		
 			
 	</div>
-<a name="method_req" id="_req"><!-- --></a>
-<div class="oddrow">
+<a name="methodpackage" id="package"><!-- --></a>
+<div class="evenrow">
 	
 	<div class="method-header">
 		<img src="../media/images/Method.png" />
-		<span class="method-title">_req</span> (line <span class="line-number">64</span>)
+		<span class="method-title">package</span> (line <span class="line-number">60</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">access:</span> public</li>
 			</ul>
 	
 	<div class="method-signature">
 		<span class="method-result">void</span>
 		<span class="method-name">
-			_req
+			package
 		</span>
-					(<span class="var-type"></span>&nbsp;<span class="var-name">$id</span>)
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsave" id="save"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">save</span> (line <span class="line-number">101</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			save
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$directory</span>)
 			</div>
 	
 			<ul class="parameters">
 					<li>
 				<span class="var-type"></span>
-				<span class="var-name">$id</span>			</li>
+				<span class="var-name">$directory</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetPackageData" id="setPackageData"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">setPackageData</span> (line <span class="line-number">24</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPackageData
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$key</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$key</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetPackageJSON" id="setPackageJSON"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">setPackageJSON</span> (line <span class="line-number">18</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPackageJSON
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$filename</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$filename</span>			</li>
 				</ul>
 		
 			
