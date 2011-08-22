@@ -56,6 +56,17 @@ class Packager_Builder {
 	}
 
 	/**
+	 * Returns a list of all filenames of the modules
+	 *
+	 * @return array
+	 */
+	public function files(){
+		$files = array();
+		foreach ($this->_modules as $module) $files[$module['url']] = $module['url'];
+		return array_values($files);
+	}
+
+	/**
 	 * Generates the concatenated module content and gives every define() an ID
 	 *
 	 * @param string $glue optional The glue which joins the code of the different modules together

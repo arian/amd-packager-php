@@ -81,6 +81,23 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testFiles(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$builder = $packager->req(array('one'));
+
+		$this->assertEquals(
+			array(
+				Path::resolve($this->fixtures, 'one.js'),
+				Path::resolve($this->fixtures, 'two.js'),
+				Path::resolve($this->fixtures, 'three.js')
+			),
+			$builder->files()
+		);
+
+	}
+
 	public function testOutput(){
 
 		$packager = new Packager;
