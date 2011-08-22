@@ -8,17 +8,19 @@ $options_file = null;
 $method = 'output';
 $output_file = null;
 $graph_file = null;
+$watch = false;
 
 function help(){
 	echo "\npackager-cli.php [options] <modules>\n\n"
 	   . "Options:\n"
 	   . "  -h --help             Show this help\n"
-	   . "  --options             Specify another options file (defaults to options.php)\n"
+	   . "  -o --options          Specify another options file (defaults to options.php)\n"
 	   . "  --output              The file the output should be written to\n"
 	   . "  --modules --list      List the modules\n"
 	   . "  --dependencies        List the dependencies map\n"
 	   . "  --graph               Create a structural dependency graph\n"
 	   . "                        and write it to this file\n"
+	   . "  --watch               Watches the files \n"
 	   . "\n";
 	exit;
 }
@@ -39,7 +41,7 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 		case '--options':
 			$options_file = $args[++$i];
 		break;
-		case '--output':
+		case '--output': case '-o':
 			$output_file = $args[++$i];
 		break;
 		case '--graph':
@@ -52,6 +54,9 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 		case '--dependencies':
 			$method = 'dependencies';
 		break;
+		case '--watch':
+			$watch = true;
+		break;
 		default:
 			$requires[] = $arg;
 		break;
@@ -60,49 +65,83 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 
 if (empty($requires)) help();
 
-$packager = new Packager;
+function packager(){
+	global $options_file, $requires;
 
-$options = $options_file ? (include $options_file) : array();
+	$packager = new Packager;
 
-$packager->setBaseUrl(
-	isset($options['baseurl']) ? $options['baseurl'] : getcwd()
-);
+	$options = $options_file ? (include $options_file) : array();
+
+	$packager->setBaseUrl(
+		isset($options['baseurl']) ? $options['baseurl'] : getcwd()
+	);
 
 
-if (isset($options['paths'])) foreach ($options['paths'] as $alias => $path){
-	$packager->addAlias($alias, $path);
-}
-
-if (!empty($options['loader'])) array_unshift($requires, dirname(__FILE__) . '/loader.js');
-
-$builder = $packager->req($requires);
-
-if ($method == 'output' || $method == 'modules'){
-	warn("\nLoaded Modules:\n  " . implode("\n  ", $builder->modules()) . "\n\n");
-}
-
-if ($method == 'output'){
-	$output = $builder->output();
-	if ($output_file) file_put_contents ($output_file, $output);
-	else echo $output;
-} elseif ($method == 'dependencies'){
-	$modules = $builder->dependencies();
-
-	$str = '';
-	foreach ($modules as $id => $deps){
-		$str .= "\n  " . $id;
-		foreach ($deps as $dep){
-			$str .= "\n    - " . $dep;
-		}
+	if (isset($options['paths'])) foreach ($options['paths'] as $alias => $path){
+		$packager->addAlias($alias, $path);
 	}
-	$str .= "\n\n";
 
-	warn($str);
+	if (!empty($options['loader'])) array_unshift($requires, dirname(__FILE__) . '/loader.js');
+
+	return $packager;
 }
 
-if ($graph_file){
-	include_once dirname(__FILE__) . '/lib/Graph.php';
-	$graph = new Packager_Graph($builder);
-	$graph->output($graph_file);
-	warn("The dependency graph has been written to '" . $graph_file . "'\n");
+function build($builder){
+	global $method, $output_file, $graph_file;
+
+	if ($method == 'output' || $method == 'modules'){
+		warn("\nLoaded Modules:\n  " . implode("\n  ", $builder->modules()) . "\n\n");
+	}
+
+	if ($method == 'output'){
+		$output = $builder->output();
+		if ($output_file) file_put_contents ($output_file, $output);
+		else echo $output;
+	} elseif ($method == 'dependencies'){
+		$modules = $builder->dependencies();
+
+		$str = '';
+		foreach ($modules as $id => $deps){
+			$str .= "\n  " . $id;
+			foreach ($deps as $dep){
+				$str .= "\n    - " . $dep;
+			}
+		}
+		$str .= "\n\n";
+
+		warn($str);
+	}
+
+	if ($graph_file){
+		include_once dirname(__FILE__) . '/lib/Graph.php';
+		$graph = new Packager_Graph($builder);
+		$graph->output($graph_file);
+		warn("The dependency graph has been written to '" . $graph_file . "'\n");
+	}
+
+}
+
+$builder = packager()->req($requires);
+
+if ($watch){
+	$files = $builder->files();
+	$times = array();
+	while (true){
+		foreach ($files as $file){
+			$time = filemtime($file);
+			if (empty($times[$file])){
+				$times[$file] = $time;
+			} elseif ($time != $times[$file]){
+				$times[$file] = $time;
+				warn("\nThe file '" . $file . "' has changed\n");
+				$builder = packager()->req($requires);
+				$files = $builder->files();
+				build($builder);
+				break;
+			}
+		}
+		sleep(1);
+	}
+} else {
+	build($builder);
 }
