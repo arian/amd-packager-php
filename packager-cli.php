@@ -14,13 +14,13 @@ function help(){
 	echo "\npackager-cli.php [options] <modules>\n\n"
 	   . "Options:\n"
 	   . "  -h --help             Show this help\n"
-	   . "  -o --options          Specify another options file (defaults to options.php)\n"
-	   . "  --output              The file the output should be written to\n"
+	   . "  --options             Specify another options file (defaults to options.php)\n"
+	   . "  -o --output           The file the output should be written to\n"
 	   . "  --modules --list      List the modules\n"
 	   . "  --dependencies        List the dependencies map\n"
 	   . "  --graph               Create a structural dependency graph\n"
 	   . "                        and write it to this file\n"
-	   . "  --watch               Watches the files \n"
+	   . "  --watch               Watches the required modules \n"
 	   . "\n";
 	exit;
 }

@@ -12,11 +12,13 @@ CLI
 	Options:
 	  -h --help             Show this help
 	  --options             Specify another options file (defaults to options.php)
-	  --output              The file the output should be written to
+	  -o --output           The file the output should be written to
 	  --modules --list      List the modules
 	  --dependencies        List the dependencies map
 	  --graph               Create a structural dependency graph
-		                    and write it to this file
+							and write it to this file
+	  --watch               Watches the required modules
+
 
 ### Tip:
 
