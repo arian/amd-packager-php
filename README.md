@@ -73,6 +73,15 @@ Unit Tests
 See the `test` folder.
 Run it with `phpunit test`
 
+Web Interface
+-------------
+
+The Web Interface of [Packager Web](https://github.com/kamicane/packager-web)
+has been ported to work with this packager. This means you can easily select
+the desired modules and build them in one or several files. The download also
+supports compressing of the JavaScript with YUI-compressor or UglifyJS. When
+the files are packaged per package, the download is provided as a ZIP file.
+
 JavaScript Examples:
 --------------------
 
