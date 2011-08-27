@@ -55,4 +55,28 @@ describe('AMD Packager', function(){
 
 	});
 
+	// different (maybe non standard) tests
+
+	describe('option: modules', function(){
+
+		it('should wrap an module without AMD define() with that function so it\'s usable', function(){
+			expect(require('modules/no-amd').foo).toEqual('yo');
+		});
+
+		it('should have the require method available', function(){
+			expect(require('modules/no-amd').require).not.toBeNull();
+		});
+
+		it('should have the exports object available', function(){
+			expect(require('modules/no-amd').exports).not.toBeNull();
+		});
+
+		it('should have the modules object available', function(){
+			expect(require('modules/no-amd').module).not.toBeNull();
+			expect(require('modules/no-amd').module.id).toEqual('modules/no-amd');
+		});
+
+	});
+
+
 });

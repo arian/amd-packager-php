@@ -15,6 +15,7 @@ $builder = $packager->req(array(
 	'modules/a',
 	'modules/module',
 	'modules/argslength',
+	'modules/no-amd',
 
 	'objectfactory'
 ));

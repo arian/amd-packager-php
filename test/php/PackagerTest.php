@@ -164,6 +164,20 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testCommonJSModulesNoAMD(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$builder = $packager->req(array('modules/no-amd'));
+
+		$this->assertEquals(array(
+			'modules/no-amd',
+			'modules/a',
+			'modules/module'
+		), $builder->modules());
+
+	}
+
 	public function testAnalyze(){
 		$class = new ReflectionClass('Packager');
 		$method = $class->getMethod('_analyze');

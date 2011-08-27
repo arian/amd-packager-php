@@ -70,6 +70,13 @@ class Packager {
 	 * $packager->req(array('Core/DOM/Node', 'Core/Array', 'More/Drag'));
 	 * </code>
 	 *
+	 * Possible options:
+	 *
+	 * - modules:
+	 *     Set this to true and an CommonJS Module without the define
+	 *     function will be wrapped into a define function so it can be used
+	 *     as a AMD module as well
+	 *
 	 * @param array $ids
 	 * @return Packager_Builder
 	 */
@@ -118,6 +125,10 @@ class Packager {
 		$options = isset($this->_options[$filename]) ? $this->_options[$filename] : array();
 		if (substr($content, 0, 14) == '/*packager-amd'){
 			$options = array_merge_recursive($options, $this->_parseOptions($content));
+		}
+
+		if (!empty($options['modules'])){
+			$content = "define(function(require, exports, module){\n" . $content . "\n});";
 		}
 
 		$deps = array();
