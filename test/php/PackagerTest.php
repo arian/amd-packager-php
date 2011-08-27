@@ -144,6 +144,26 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testOptions(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$packager->setOptions(Path::resolve($this->fixtures, 'options.js'), array(
+			'foo' => 'bar'
+		));
+		$builder = $packager->req(array('options'));
+
+		$modules = $builder->loaded();
+		$options = $modules['options']['options'];
+
+		$this->assertEquals(array(
+			'foo' => 'bar',
+			'modules' => 'true',
+			'amd' => true
+		), $options);
+
+	}
+
 	public function testAnalyze(){
 		$class = new ReflectionClass('Packager');
 		$method = $class->getMethod('_analyze');

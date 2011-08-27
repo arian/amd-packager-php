@@ -9,6 +9,7 @@ class Packager {
 	protected $_alias = array();
 	protected $_modules = array();
 	protected $_files = array();
+	protected $_options = array();
 	protected $_skip = array('require', 'exports', 'module');
 
 	public function __construct(){
@@ -42,6 +43,22 @@ class Packager {
 	 */
 	public function addAlias($alias, $url){
 		$this->_alias[$alias] = $url;
+		return $this;
+	}
+
+	/**
+	 * Set parsing options for a file. It is also possible to set the options
+	 * in the actual file with on the very first line:
+	 *
+	 * <code>/*packager-amd option: value, option2: value* /</code>
+	 *
+	 * @param string $file
+	 * @param array $options
+	 * @return Packager
+	 */
+	public function setOptions($file, array $options){
+		if (empty($this->_options[$file])) $this->_options[$file] = $options;
+		else $this->_options[$file] = array_merge_recursive($this->_options[$file], $options);
 		return $this;
 	}
 
@@ -97,6 +114,12 @@ class Packager {
 		*/
 
 		$content = file_get_contents($filename);
+
+		$options = isset($this->_options[$filename]) ? $this->_options[$filename] : array();
+		if (substr($content, 0, 14) == '/*packager-amd'){
+			$options = array_merge_recursive($options, $this->_parseOptions($content));
+		}
+
 		$deps = array();
 		$_id = '';
 		$amd = $amd && (strpos($content, 'define') !== false);
@@ -149,6 +172,7 @@ class Packager {
 			'url' => $filename,
 			'package' => $package,
 			'amd' => $amd,
+			'options' => $options,
 			'content' => $content,
 			'dependencies' => $deps
 		);
@@ -156,6 +180,23 @@ class Packager {
 		$this->_files[$filename] = $id;
 
 		foreach ($deps as $_dep) $this->_req($_dep);
+	}
+
+	protected function _parseOptions($code){
+		$options = array();
+		$match = preg_match('/\/\*packager\-amd(.*?)\*\//ms', $code, $matches);
+		if (!$match) return $options;
+		$_options = explode(',', $matches[1]);
+		foreach ($_options as $key => $option){
+			$_option = explode(':', $option);
+			if (count($_option) > 1){
+				$value = trim($_option[1]);
+				if ($value == 'true') $value = true;
+				else if ($value == 'false') $value = false;
+				$options[trim($_option[0])] = $value;
+			} else $options[trim($_option[0])] = true;
+		}
+		return $options;
 	}
 
 	protected function _analyze($code){
