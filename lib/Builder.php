@@ -132,20 +132,26 @@ class Packager_Builder {
 	/**
 	 * Reduces the number of modules to the given ids and their dependencies
 	 *
-	 * @param array $ids
+	 * @param array $ids The new required IDs
+	 * @param array $excludes Exclude certain modules (and their dependencies)
 	 * @return Packager_Builder
 	 */
-	public function reduce(array $ids){
+	public function reduce(array $ids, $excludes = array()){
 		$old = $this->_modules;
 		$this->_modules = array();
-		$this->_reduce($ids, $old);
+		$this->_reduce($ids, $old, $excludes);
 		return $this;
 	}
 
-	protected function _reduce($ids, $old){
-		foreach ($ids as $id) if (isset($old[$id]) && !isset($this->_modules[$id])){
-			$this->_modules[$id] = $old[$id];
-			$this->_reduce($this->_modules[$id]['dependencies'], $old);
+	protected function _reduce($ids, $old, $excludes){
+		foreach ($ids as $id){
+			if (isset($old[$id])
+				&& !isset($this->_modules[$id])
+				&& !in_array($id, $excludes)
+			){
+				$this->_modules[$id] = $old[$id];
+				$this->_reduce($this->_modules[$id]['dependencies'], $old, $excludes);
+			}
 		}
 	}
 
