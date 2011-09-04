@@ -12,7 +12,7 @@ describe('AMD Packager', function(){
 	 */
 	describe('basic', function(){
 		it('should require its dependencies and the module factory should return the correct value', function(){
-			expect(require('basic/three')).toEqual(3);
+			expect(packager.require('basic/three')).toEqual(3);
 		});
 	});
 
@@ -28,15 +28,15 @@ describe('AMD Packager', function(){
 	describe('Modules/1.1', function(){
 
 		it('should require another module and put it on the exports object', function(){
-			expect(require('modules/require').test).toEqual('a');
+			expect(packager.require('modules/require').test).toEqual('a');
 		});
 
 		it('should return the module object with the correct module.id', function(){
-			expect(require('modules/module').id).toEqual('modules/module');
+			expect(packager.require('modules/module').id).toEqual('modules/module');
 		});
 
 		it('should return call the factory function with only the arity of the fuction', function(){
-			expect(require('modules/argslength')).toEqual(2);
+			expect(packager.require('modules/argslength')).toEqual(2);
 		});
 
 	});
@@ -50,7 +50,7 @@ describe('AMD Packager', function(){
 	describe('factory', function(){
 
 		it('should act as the exported value if the factory is an object', function(){
-			expect(require('objectfactory')).toEqual({a: 1, b: 2});
+			expect(packager.require('objectfactory')).toEqual({a: 1, b: 2});
 		});
 
 	});
@@ -60,20 +60,20 @@ describe('AMD Packager', function(){
 	describe('option: modules', function(){
 
 		it('should wrap an module without AMD define() with that function so it\'s usable', function(){
-			expect(require('modules/no-amd').foo).toEqual('yo');
+			expect(packager.require('modules/no-amd').foo).toEqual('yo');
 		});
 
 		it('should have the require method available', function(){
-			expect(require('modules/no-amd').require).not.toBeNull();
+			expect(packager.require('modules/no-amd').require).not.toBeNull();
 		});
 
 		it('should have the exports object available', function(){
-			expect(require('modules/no-amd').exports).not.toBeNull();
+			expect(packager.require('modules/no-amd').exports).not.toBeNull();
 		});
 
 		it('should have the modules object available', function(){
-			expect(require('modules/no-amd').module).not.toBeNull();
-			expect(require('modules/no-amd').module.id).toEqual('modules/no-amd');
+			expect(packager.require('modules/no-amd').module).not.toBeNull();
+			expect(packager.require('modules/no-amd').module.id).toEqual('modules/no-amd');
 		});
 
 	});

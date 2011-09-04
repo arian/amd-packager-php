@@ -71,7 +71,10 @@ Unit Tests
 ----------
 
 See the `test` folder.
-Run it with `phpunit test`
+Run it with `phpunit test` for the PHP Packager.
+For the resulted JavaScript and the Loader.js you could open
+`test/js/SpecRunner.html` in your browser or run `test/js/SpecRunner.js` with
+Node.js.
 
 Web Interface
 -------------

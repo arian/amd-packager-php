@@ -1,3 +1,4 @@
 docs/*
 docs
 web/cache/modules.json
+test/js/build.js
