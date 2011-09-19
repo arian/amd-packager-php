@@ -124,6 +124,51 @@ The packager will add an ID to each `define()` function an ID so when each
 already had an ID, it will not replace it.
 
 
+Using `has()`
+-------------
+
+[has.js](https://github.com/phiggins42/has.js) is a great tool for feature detections
+and has a nice API which makes it easy to strip unnecessary code and which works
+on the client-side as well.
+
+**Example of using has()**
+
+``` javascript
+define(function(){
+
+	if (has('css-transitions')){
+		// do something cool
+	} else {
+		// meh...
+	}
+
+});
+```
+
+Now if you *know* your script will only be used in modern browsers, the `else`
+code-branch is useless.
+
+``` php
+$packager = new Packager;
+$builder = $packager->req(array('ModuleA', 'ModuleB'));
+
+$builder->addHas('css-transitions', true);
+$builder->output();
+```
+
+This will result in code like:
+
+``` javascript
+if (true){
+	// do something cool
+} else {
+	// meh...
+}
+```
+
+Minifiers, like UglifyJS or Google Closure Compiler, can remove dead-code branches
+like these. This will make your build perfectly optimized for your environment.
+
 Analysis
 --------
 

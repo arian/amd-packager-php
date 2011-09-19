@@ -15,6 +15,8 @@ function help(){
 	   . "Options:\n"
 	   . "  -h --help             Show this help\n"
 	   . "  --options             Specify another options file (defaults to options.php)\n"
+	   . "  --has [features]      Features for the has() api. Example: `--has feature=0 ie=1`\n"
+	   . "  --require [requires]  Require these modules\n"
 	   . "  -o --output           The file the output should be written to\n"
 	   . "  --modules --list      List the modules\n"
 	   . "  --dependencies        List the dependencies map\n"
@@ -31,10 +33,14 @@ function warn($message){
 	fclose($std_err);
 }
 
+$has = array();
+$_has = false;
 $requires = array();
 
 for ($i = 0, $l = count($args); $i < $l; $i++){
 	$arg = $args[$i];
+
+	if (substr($arg, 0, 1) == '-') $_has = false;
 
 	switch ($arg){
 		case '-h': case '--help': help(); break;
@@ -43,6 +49,11 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 		break;
 		case '--output': case '-o':
 			$output_file = $args[++$i];
+		break;
+		case '--has':
+			$_has = true;
+		break;
+		case '--require':
 		break;
 		case '--graph':
 			$graph_file = $args[++$i];
@@ -58,24 +69,31 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 			$watch = true;
 		break;
 		default:
-			$requires[] = $arg;
+			if (!$_has) $requires[] = $arg;
+			else {
+				$feature = explode('=', $arg);
+				$has[$feature[0]] = isset($feature[1])
+					? ($feature[1] == 'false' || $feature[1] == '0'
+						? false : true)
+					: true;
+			}
 		break;
 	}
 }
 
 if (empty($requires)) help();
 
+$options = $options_file ? (include $options_file) : array();
+if (!empty($options['has'])) $has = array_merge($options['has'], $has);
+
 function packager(){
-	global $options_file, $requires;
+	global $requires, $options;
 
 	$packager = new Packager;
-
-	$options = $options_file ? (include $options_file) : array();
 
 	$packager->setBaseUrl(
 		isset($options['baseurl']) ? $options['baseurl'] : getcwd()
 	);
-
 
 	if (isset($options['paths'])) foreach ($options['paths'] as $alias => $path){
 		$packager->addAlias($alias, $path);
@@ -87,11 +105,13 @@ function packager(){
 }
 
 function build($builder){
-	global $method, $output_file, $graph_file;
+	global $method, $has, $output_file, $graph_file;
 
 	if ($method == 'output' || $method == 'modules'){
 		warn("\nLoaded Modules:\n  " . implode("\n  ", $builder->modules()) . "\n\n");
 	}
+
+	$builder->addHas($has);
 
 	if ($method == 'output'){
 		$output = $builder->output();

@@ -132,6 +132,33 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $actual);
 	}
 
+	public function testOutputHas(){
+
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+		$builder = $packager->req(array('has'));
+
+		$builder->addHas('feature', true)
+				->addHas(array('feature-1' => false, 'feature-2' => true));
+
+		$expected = "\n"
+			. "define('has', function(){\n"
+			. "\n"
+			. "	true;\n"
+			. "	true;\n"
+			. "	true;\n"
+			. "	true;\n"
+			. "	false\n"
+			. "	true\n"
+			. "	has('noidea');\n"
+			. "\n"
+			. "});\n";
+
+		$actual = $builder->output();
+		$this->assertEquals($expected, $actual);
+
+	}
+
 	public function testOutputObjectAsFactory(){
 
 		$packager = new Packager;

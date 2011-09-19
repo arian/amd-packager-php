@@ -5,9 +5,25 @@ include_once dirname(__FILE__) . '/Packager.php';
 class Packager_Builder {
 
 	protected $_modules = array();
+	protected $_has = array();
 
 	public function __construct($modules){
 		$this->_modules = $modules;
+	}
+
+	/**
+	 * A has() feature
+	 * @param type $feature
+	 * @param type $result
+	 * @return Packager_Builder
+	 */
+	public function addHas($feature, $result = null){
+		if ($result === null){
+			foreach ($feature as $_feature => $_result) $this->_has[$_feature] = $_result;
+		} else {
+			$this->_has[$feature] = $result;
+		}
+		return $this;
 	}
 
 	/**
@@ -92,20 +108,32 @@ class Packager_Builder {
 	protected function _output($modules, $glue = "\n\n"){
 		$code = array();
 		foreach ($modules as $module){
-			$module = $this->_fix($module);
+			if (empty($module['content']) && !empty($module['url'])){
+				$module['content'] = file_get_contents($module['url']);
+			}
+			$module = $this->_fixID($module);
+			$module = $this->_replaceHas($module);
 			$code[] = $module['content'];
 		}
 		return implode($glue, $code);
 	}
 
-	protected function _fix($module){
-		if (empty($module['content']) && !empty($module['url'])){
-			$module['content'] = file_get_contents($module['url']);
-		}
+	protected function _fixID($module){
 		if ($module['amd']){
 			$module['content'] = preg_replace('/define\((\[|\{|function)/', "define('" . $module['id'] . "', $1", $module['content']);
 		}
 		return $module;
+	}
+
+	protected function _replaceHas($module){
+		$module['content'] = preg_replace_callback('/has ?\( ?[\'"]([\w-]+)[\'"] ?\)/i', array($this, '_replaceHasString'), $module['content']);
+		return $module;
+	}
+
+	protected function _replaceHasString($match){
+		$feature = $match[1];
+		if (isset($this->_has[$feature])) return $this->_has[$feature] ? 'true' : 'false';
+		return $match[0];
 	}
 
 	// JSON encoding and decoding
