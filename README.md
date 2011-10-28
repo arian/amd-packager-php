@@ -13,13 +13,14 @@ CLI
 	  -h --help             Show this help
 	  --options             Specify another options file (defaults to options.php)
 	  --has [features]      Features for the has() api. Example: `--has feature=0 ie=1`
-	  --require [requires]  Require these modules
+	  --require [modules]   Require these modules
+	  --exclude [modules]   Exclude these modues
 	  -o --output           The file the output should be written to
 	  --modules --list      List the modules
 	  --dependencies        List the dependencies map
 	  --graph               Create a structural dependency graph
 	                        and write it to this file
-	  --watch               Watches the required modules 
+	  --watch               Watches the required modules
 
 
 ### Tip:
@@ -58,6 +59,13 @@ $packager->addAlias('Tests', 'MooTools/Tests');
 // Require. Returns a Packager_Builder instance
 
 $builder = $packager->req(array('Core/DOM/Node', 'Tests/Host/Array'));
+
+// reduce to a new set, or exclude modules
+$builder->reduce(array('Tests/Host/Array'));
+// soft exclude
+$builder->exclude(array('Tests/Utility/typeOf'));
+// forced exclude
+$builder->excludeForced(array('Tests/Utility/typeOf'));
 
 // Output
 

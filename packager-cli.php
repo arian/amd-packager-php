@@ -16,13 +16,14 @@ function help(){
 	   . "  -h --help             Show this help\n"
 	   . "  --options             Specify another options file (defaults to options.php)\n"
 	   . "  --has [features]      Features for the has() api. Example: `--has feature=0 ie=1`\n"
-	   . "  --require [requires]  Require these modules\n"
+	   . "  --require [modules]   Require these modules\n"
+	   . "  --exclude [modules]   Exclude these modues\n"
 	   . "  -o --output           The file the output should be written to\n"
 	   . "  --modules --list      List the modules\n"
 	   . "  --dependencies        List the dependencies map\n"
 	   . "  --graph               Create a structural dependency graph\n"
 	   . "                        and write it to this file\n"
-	   . "  --watch               Watches the required modules \n"
+	   . "  --watch               Watches the required modules\n"
 	   . "\n";
 	exit;
 }
@@ -36,11 +37,16 @@ function warn($message){
 $has = array();
 $_has = false;
 $requires = array();
+$excludes = array();
+$_exclude = false;
 
 for ($i = 0, $l = count($args); $i < $l; $i++){
 	$arg = $args[$i];
 
-	if (substr($arg, 0, 1) == '-') $_has = false;
+	if (substr($arg, 0, 1) == '-'){
+		$_has = false;
+		$_exclude = false;
+	}
 
 	switch ($arg){
 		case '-h': case '--help': help(); break;
@@ -54,6 +60,9 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 			$_has = true;
 		break;
 		case '--require':
+		break;
+		case '--exclude':
+			$_exclude = true;
 		break;
 		case '--graph':
 			$graph_file = $args[++$i];
@@ -69,13 +78,16 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 			$watch = true;
 		break;
 		default:
-			if (!$_has) $requires[] = $arg;
-			else {
+			if ($_has){
 				$feature = explode('=', $arg);
 				$has[$feature[0]] = isset($feature[1])
 					? ($feature[1] == 'false' || $feature[1] == '0'
 						? false : true)
 					: true;
+			} elseif ($_exclude){
+				$excludes[] = $arg;
+			} else {
+				$requires[] = $arg;
 			}
 		break;
 	}
@@ -105,7 +117,11 @@ function packager(){
 }
 
 function build($builder){
-	global $method, $has, $output_file, $graph_file;
+	global $method, $has, $excludes, $requires, $output_file, $graph_file;
+
+	if (!empty($excludes)){
+		$builder->reduce($requires, $excludes);
+	}
 
 	if ($method == 'output' || $method == 'modules'){
 		warn("\nLoaded Modules:\n  " . implode("\n  ", $builder->modules()) . "\n\n");

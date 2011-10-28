@@ -219,25 +219,75 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 
 	public function testReduce(){
 
-		$packager = new Packager;
-		$packager->setBaseUrl($this->fixtures);
-		$builder = $packager->req(array('basic/three'));
+		$builder = new Packager_Builder(array(
+			'one'   => array('id' => 'one',   'dependencies' => array()),
+			'two'   => array('id' => 'two',   'dependencies' => array('one')),
+			'three' => array('id' => 'three', 'dependencies' => array('one', 'two')),
+			'four'  => array('id' => 'four',  'dependencies' => array('one', 'three'))
+		));
 
-		$builder->reduce(array('basic/two'));
+		$builder->reduce(array('two'));
 
-		$this->assertEquals(array('basic/two', 'basic/one'), $builder->modules());
+		$this->assertEquals(array('two', 'one'), $builder->modules());
 
 	}
 
 	public function testReduceExcludes(){
 
-		$packager = new Packager;
-		$packager->setBaseUrl($this->fixtures);
-		$builder = $packager->req(array('basic/four'));
+		$builder = new Packager_Builder(array(
+			'one'   => array('id' => 'one',   'dependencies' => array()),
+			'two'   => array('id' => 'two',   'dependencies' => array('one')),
+			'three' => array('id' => 'three', 'dependencies' => array('one', 'two')),
+			'four'  => array('id' => 'four',  'dependencies' => array('one', 'three'))
+		));
 
-		$builder->reduce(array('basic/four'), array('basic/three'));
+		$builder->reduce(array('four'), array('three'));
 
-		$this->assertEquals(array('basic/four', 'basic/one'), $builder->modules());
+		$this->assertEquals(array('four', 'one'), $builder->modules());
+
+	}
+
+	public function testExclude(){
+
+		$modules = array(
+			'one'   => array('id' => 'one',   'dependencies' => array()),
+			'two'   => array('id' => 'two',   'dependencies' => array('one')),
+			'three' => array('id' => 'three', 'dependencies' => array('one', 'two')),
+			'four'  => array('id' => 'four',  'dependencies' => array('one', 'three'))
+		);
+		$builder = new Packager_Builder($modules);
+
+		// won't be excluded, is required by four
+		$builder->exclude(array('three'));
+		$this->assertEquals(array('one', 'two', 'four', 'three'), $builder->modules());
+
+		$builder = new Packager_Builder($modules);
+
+		// now also exclude basic/four
+		$builder->exclude(array('three', 'four'));
+		$this->assertEquals(array('one', 'two'), $builder->modules());
+
+	}
+
+	public function testExcludeForced(){
+
+		$modules = array(
+			'one'   => array('id' => 'one',   'dependencies' => array()),
+			'two'   => array('id' => 'two',   'dependencies' => array('one')),
+			'three' => array('id' => 'three', 'dependencies' => array('one', 'two')),
+			'four'  => array('id' => 'four',  'dependencies' => array('one', 'three'))
+		);
+		$builder = new Packager_Builder($modules);
+
+		// will be excluded
+		$builder->excludeForced(array('three'));
+		$this->assertEquals(array('one', 'two', 'four'), $builder->modules());
+
+		$builder = new Packager_Builder($modules);
+
+		// now also exclude basic/four
+		$builder->excludeForced(array('one', 'four'));
+		$this->assertEquals(array('two', 'three'), $builder->modules());
 
 	}
 

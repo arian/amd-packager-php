@@ -183,4 +183,50 @@ class Packager_Builder {
 		}
 	}
 
+	/**
+	 * Exclude certain modules.
+	 * However when another module depends on the excluded module, and isn't
+	 * itself excluded, the module won't be excluded.
+	 *
+	 * @example
+	 * <pre>
+	 *    Class
+	 *      \        typeOf
+	 *     merge
+	 * </pre>
+	 *
+	 * $builder->exclude(array('merge', 'typeof')) would exclude 'typeOf',
+	 * because other modules do not have a dependency on it. However 'merge'
+	 * would not be removed because it's still required by Class
+	 *
+	 * @param array $ids
+	 * @return type
+	 */
+	public function exclude(array $ids){
+		$reduced = array();
+		foreach ($this->_modules as $id => $module){
+			if (!in_array($id, $ids)) $reduced[] = $id;
+		}
+		return $this->reduce($reduced);
+	}
+
+	/**
+	 * Excluded certain modules. Even when other modules depend on this file.
+	 *
+	 * @example
+	 * <pre>
+	 *    Class
+	 *      \
+	 *     merge
+	 * </pre>
+	 *
+	 * $builder->excludeForced(array('merge')) would remove merge, even though
+	 * it's required by Class
+	 *
+	 * @param array $ids
+	 */
+	public function excludeForced(array $ids){
+		return $this->reduce(array_keys($this->_modules), $ids);
+	}
+
 }
