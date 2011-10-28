@@ -65,6 +65,38 @@ class PackagerText extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testAlias(){
+
+		// Aliasing a file
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+
+		$packager->addAlias('Moo', 'MooTools/Core.js');
+		$builder = $packager->req(array('Moo'));
+
+		$loaded = $builder->loaded();
+
+		$this->assertTrue(isset($loaded['Moo']));
+		$this->assertEquals($loaded['Moo']['url'], Path::resolve($this->fixtures,  'MooTools/Core.js'));
+		$this->assertEquals($loaded['Moo']['id'], 'Moo');
+		$this->assertEquals($loaded['Moo']['package'], '');
+
+		// Aliasing a path
+		$packager = new Packager;
+		$packager->setBaseUrl($this->fixtures);
+
+		$packager->addAlias('Moo', 'MooTools');
+		$builder = $packager->req(array('Moo/Core'));
+
+		$loaded = $builder->loaded();
+
+		$this->assertTrue(isset($loaded['Moo/Core']));
+		$this->assertEquals($loaded['Moo/Core']['url'], Path::resolve($this->fixtures,  'MooTools/Core.js'));
+		$this->assertEquals($loaded['Moo/Core']['id'], 'Moo/Core');
+		$this->assertEquals($loaded['Moo/Core']['package'], 'Moo');
+
+	}
+
 	public function testDOMNode(){
 
 		$packager = new Packager;
