@@ -180,9 +180,7 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 		$packager = new Packager;
 		$packager->setBaseUrl($this->fixtures);
 		$packager->addAlias('PackageA', 'packageA')->addAlias('PackageB', 'packageB');
-		$builder = $packager->req(array('PackageA/a'));
-
-		$packages = $builder->packages();
+		$builder = $packager->req(array('PackageA/a', 'two'));
 
 		$expected = array(
 			'PackageA' => "\n"
@@ -198,7 +196,13 @@ class BuilderTest extends PHPUnit_Framework_TestCase {
 			'PackageB' => "\n"
 				. "define('PackageB/b', function(){\n"
 				. "	return 'b';\n"
-				. "});\n");
+				. "});\n",
+			'two' => ''
+				. 'define("two", function(){' . "\n"
+				. "    return 'bar';\n"
+				. "  }\n"
+				. ");\n"
+			);
 
 		$this->assertEquals($expected, $builder->outputByPackage('//----'));
 

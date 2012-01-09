@@ -100,7 +100,14 @@ class Packager_Builder {
 	public function outputByPackage($glue = "\n\n"){
 		$codes = array();
 		foreach ($this->packages() as $package => $modules){
-			$codes[$package] = $this->_output($modules, $glue);
+			if (empty($package)) {
+				// don't concatenate these modules that do not belong to a package
+				foreach ($modules as $module){
+					$codes[$module['id']] = $this->_output(array($module), $glue);
+				}
+			} else {
+				$codes[$package] = $this->_output($modules, $glue);
+			}
 		}
 		return $codes;
 	}
