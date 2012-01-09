@@ -9,6 +9,7 @@ $method = 'output';
 $output_file = null;
 $graph_file = null;
 $watch = false;
+$group = false;
 
 function help(){
 	echo "\npackager-cli.php [options] <modules>\n\n"
@@ -19,6 +20,7 @@ function help(){
 	   . "  --require [modules]   Require these modules\n"
 	   . "  --exclude [modules]   Exclude these modues\n"
 	   . "  -o --output           The file the output should be written to\n"
+	   . "  --group               Group ouput by package\n"
 	   . "  --modules --list      List the modules\n"
 	   . "  --dependencies        List the dependencies map\n"
 	   . "  --graph               Create a structural dependency graph\n"
@@ -55,6 +57,9 @@ for ($i = 0, $l = count($args); $i < $l; $i++){
 		break;
 		case '--output': case '-o':
 			$output_file = $args[++$i];
+		break;
+		case '--group':
+			$group = true;
 		break;
 		case '--has':
 			$_has = true;
@@ -112,12 +117,11 @@ function packager(){
 	}
 
 	if (!empty($options['loader'])) array_unshift($requires, dirname(__FILE__) . '/loader.js');
-
 	return $packager;
 }
 
 function build($builder){
-	global $method, $has, $excludes, $requires, $output_file, $graph_file;
+	global $method, $has, $excludes, $requires, $output_file, $graph_file, $group;
 
 	if (!empty($excludes)){
 		$builder->reduce($requires, $excludes);
@@ -130,9 +134,21 @@ function build($builder){
 	$builder->addHas($has);
 
 	if ($method == 'output'){
-		$output = $builder->output();
-		if ($output_file) file_put_contents ($output_file, $output);
-		else echo $output;
+		if ($group && $output_file){
+			$output = $builder->outputByPackage();
+			foreach ($output as $_package => $_content){
+				$filename = $_package . '.js';
+				if (Path::extname($_package) == '.js') {
+					// not an AMD module
+					$filename = Path::filename($_package);
+				}
+				file_put_contents(Path::resolve($output_file, $filename) , $_content);
+			}
+		} else {
+			$output = $builder->output();
+			if ($output_file) file_put_contents ($output_file, $output);
+			else echo $output;
+		}
 	} elseif ($method == 'dependencies'){
 		$modules = $builder->dependencies();
 
