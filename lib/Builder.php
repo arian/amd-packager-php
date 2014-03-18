@@ -113,8 +113,45 @@ class Packager_Builder {
 	}
 
 	protected function _output($modules, $glue = "\n\n"){
+		$modules = array_values($modules);
 		$code = array();
-		foreach ($modules as $module){
+		$urls = array();
+		$deps = array();
+		$mods = array();
+
+		foreach ($modules as $module) {
+			$urls[$module['id']] = $module['url'];
+			$mods[$module['url']] = $module;
+			$deps[$module['url']] = array();
+		}
+
+		foreach ($mods as $module) {
+			foreach ($module['dependencies'] as $dependency) {
+				if (isset($urls[$dependency])) {
+					$deps[$module['url']][] = $urls[$dependency];
+				}
+			}
+		}
+
+		function calc_deps(&$results, $deps, $url = null) {
+			$is_root = empty($url);
+			$list = $is_root ? $deps : $deps[$url];
+
+			foreach ($list as $key => $val) {
+				$target = $is_root ? $key : $val;
+				calc_deps($results, $deps, $target);
+
+				if (!in_array($target, $results)) {
+					$results[] = $target;
+				}
+			}
+		};
+
+		$orders = array();
+		calc_deps($orders, $deps);
+
+		foreach ($orders as $url){
+			$module = $mods[$url];
 			if (empty($module['content']) && !empty($module['url'])){
 				$module['content'] = file_get_contents($module['url']);
 			}

@@ -17,7 +17,7 @@ class Packager {
 	}
 
 	/**
-	 * Sets the base path where ->req() and ->addAlias methos are relative to
+	 * Sets the base path where ->req() and ->addAlias methods are relative to
 	 * If the baseurl is not set, it will default to the directory of this
 	 * Packager.php file
 	 *
@@ -25,7 +25,7 @@ class Packager {
 	 * @return Packager
 	 */
 	public function setBaseUrl($url){
-		$this->_baseurl = $url;
+		$this->_baseurl = str_replace(DIRECTORY_SEPARATOR, '/', $url);
 		return $this;
 	}
 
@@ -90,23 +90,29 @@ class Packager {
 		if (strpos($id, '!') !== false) return;
 
 		$filename = $id;
+		$package = '';
 		$extension = Path::extname($filename);
 		$amd = !in_array($extension, array('.js', '.css'/* more? */));
-		if ($amd) $filename .= '.js';
 
-		$package = '';
-		foreach ($this->_alias as $alias => $url){
-			if ($id == $alias){
-				$filename = $url;
-			} else {
-				$len = strlen($alias);
-				if (substr($filename, 0, $len) == $alias){
-					$filename = Path::resolve($url, substr($filename, $len + 1));
-					$package = $alias;
+		if (!preg_match('/^(\/|\.\/|\.\.\/)/', $filename)) {
+			$syms = explode('/', $filename);
+			for ($i = count($syms); $i > 0; $i--) {
+				$path = join('/', array_slice($syms, 0, $i));
+				if (isset($this->_alias[$path])) {
+					$package = $path;
+					if ($path = $this->_alias[$path]) {
+						if ($path == 'empty:') return; // exclude this module
+						array_splice($syms, 0, $i, $path); // replace matched
+					} else {
+						array_splice($syms, 0, $i); // delete matched
+					}
 					break;
 				}
 			}
+			$filename = implode('/', $syms);
 		}
+
+		if ($amd) $filename .= '.js';
 
 		$filename = Path::resolve($this->_baseurl, $filename);
 		if (isset($this->_files[$filename])) return;
